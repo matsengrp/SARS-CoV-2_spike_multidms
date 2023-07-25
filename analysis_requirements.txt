@@ -1,0 +1,9 @@
+multidms==0.2.0
+scipy
+numpy
+pandas
+jax
+jaxlib
+matplotlib
+seaborn
+tqdm

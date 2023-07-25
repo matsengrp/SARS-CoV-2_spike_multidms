@@ -1,0 +1,48 @@
+name: Build and Deploy Docs
+ 
+# execute this workflow automatically when a we push to master
+on:
+  push:
+    branches: 
+      - main
+      - test_docs_pages
+ 
+jobs:
+ 
+  build_docs_job:
+    runs-on: ubuntu-latest
+ 
+    steps:
+
+    - name: Checkout 🛎️
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.9
+        cache: pip
+
+    - name: Install Pandoc
+      uses: r-lib/actions/setup-pandoc@v2
+
+    - name: Install multidms
+      run: |
+          # TODO install via requirements file instead
+          # but first build it and run yourself. 
+          pip install --upgrade pip
+          pip install -r requirements.txt
+      
+    - name: Build 🔧
+      run: |
+        make -C docs clean
+        make -C docs html
+  
+    - name: Deploy 🚀
+      uses: JamesIves/github-pages-deploy-action@v4
+      with:
+        branch: gh-pages
+        #I think 
+        # folder: docs/_build/html
+        folder: _build/html
+      
