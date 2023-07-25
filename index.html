@@ -1,0 +1,158 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Analysis of SARS-CoV-2 Spike homologs using multidms &#8212; multidms-spike-analysis 2023-07-21 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Spike Analysis" href="spike-analysis.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="analysis-of-sars-cov-2-spike-homologs-using-multidms">
+<h1>Analysis of SARS-CoV-2 Spike homologs using <cite>multidms</cite><a class="headerlink" href="#analysis-of-sars-cov-2-spike-homologs-using-multidms" title="Permalink to this heading">¶</a></h1>
+<p>This page contains a single notebook with all code used
+to produce the analysis in our manuscript:
+Jointly modeling deep mutational scans identifies shifted mutational effects among SARS-CoV-2 spike homologs.
+The purpose of this is two-fold: 1. for code availability and reproducibility of our manuscript analysis,
+and as an example of how the <cite>multidms</cite> API might be used in your own analysis.</p>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="spike-analysis.html">Spike Analysis</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="spike-analysis.html#computational-platform-attributes">Computational platform attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spike-analysis.html#import-notebook-dependencies">Import Notebook Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spike-analysis.html#prep-data">Prep Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spike-analysis.html#variant-barcode-and-mutation-background-stats">Variant barcode and mutation background stats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spike-analysis.html#functional-score-distributions">Functional score distributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spike-analysis.html#initialize-replicate-multidms-data-objects-for-fitting">Initialize replicate <code class="docutils literal notranslate"><span class="pre">multidms.Data</span></code> objects for fitting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spike-analysis.html#shrinkage-analysis">Shrinkage Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spike-analysis.html#convergence">Convergence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spike-analysis.html#global-epistasis-fits">Global epistasis fits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spike-analysis.html#percent-shifts-under-x">Percent Shifts Under X</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spike-analysis.html#correlation-of-ba2-and-delta-shifts">Correlation of BA2 and Delta Shifts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spike-analysis.html#shifted-mutations-heat-and-site-map">Shifted mutations heat, and site map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spike-analysis.html#interactive-altair-chart">Interactive altair chart</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spike-analysis.html#validation-mutations">Validation mutations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spike-analysis.html#comparison-to-single-experiment-fits">Comparison to single experiment fits</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spike-analysis.html#model-reference-choice-comparison">Model reference choice comparison</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this heading">¶</a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="#">multidms-spike-analysis</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Analysis of SARS-CoV-2 Spike homologs using multidms</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contents</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="spike-analysis.html">Spike Analysis</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+      <li>Next: <a href="spike-analysis.html" title="next chapter">Spike Analysis</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, Jared Galloway.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

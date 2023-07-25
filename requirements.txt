@@ -1,4 +1,0 @@
-notebook
-sphinx
-sphinx-togglebutton
-myst-nb
