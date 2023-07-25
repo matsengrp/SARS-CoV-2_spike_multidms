@@ -43,15 +43,15 @@
             
   <section id="spike-analysis">
 <h1>Spike Analysis<a class="headerlink" href="#spike-analysis" title="Permalink to this heading">¶</a></h1>
-<p>This notebook contains the entire analysis seen in our manuscript <em>Jointly modeling deep mutational scans identifies shifted mutational effects among SARS-CoV-2 spike homologs</em>. Some cell’s input, output, or both are hidden for brevity. Use the “+” to expand any cell and see further details.</p>
+<p>This notebook contains the entire analysis seen in our manuscript <em>Jointly modeling deep mutational scans identifies shifted mutational effects among SARS-CoV-2 spike homologs</em>. Some cell’s input, output, or both are hidden for brevity - you may toggle the contents using the drop down bars</p>
 <section id="computational-platform-attributes">
 <h2>Computational platform attributes<a class="headerlink" href="#computational-platform-attributes" title="Permalink to this heading">¶</a></h2>
-<p>This section shows the attributes of the machine which ran this notebook. Click the expand button to see the detailed information</p>
+<p>This section shows the attributes of the machine which ran this notebook.</p>
 <p>Operating system</p>
 <div class="cell tag_hide-cell docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell content</span>
+<span class="collapsed">Hide content</span>
 <span class="expanded">Hide code cell content</span>
 </summary>
 <div class="cell_input docutils container">
@@ -67,10 +67,11 @@ VERSION=&quot;18.04.6 LTS (Bionic Beaver)&quot;
 </div>
 </details>
 </div>
+<p>Hardware (Processors and RAM)</p>
 <div class="cell tag_hide-cell docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell content</span>
+<span class="collapsed">Hide content</span>
 <span class="expanded">Hide code cell content</span>
 </summary>
 <div class="cell_input docutils container">
@@ -99,62 +100,22 @@ WARNING: output may be incomplete or inaccurate, you should run this program as 
 </div>
 </details>
 </div>
+<p>GPU’s</p>
 <div class="cell tag_hide-cell docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell content</span>
-<span class="expanded">Hide code cell content</span>
-</summary>
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="k">$(</span>module<span class="w"> </span>list<span class="k">)</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-n<span class="w"> </span><span class="m">3</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[m1h=
-Currently Loaded Modules:[m
-  1) CUDA/11.8.0   2) cuDNN/8.6.0.163-CUDA-11.8.0[m
-[m
- [m
-[m
-[K[?1l&gt;
-</pre></div>
-</div>
-</div>
-</details>
-</div>
-<div class="cell tag_hide-cell docutils container">
-<details class="hide above-input">
-<summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell content</span>
-<span class="expanded">Hide code cell content</span>
-</summary>
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span><span class="w"> </span>nvidia-smi<span class="w"> </span>-L
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>GPU 0: NVIDIA A100 80GB PCIe (UUID: GPU-414cb1bd-372a-4926-b140-b734687c927f)
-GPU 1: NVIDIA A100 80GB PCIe (UUID: GPU-e54c2054-5be3-ebd0-e22e-b98441ec664f)
-</pre></div>
-</div>
-</div>
-</details>
-</div>
-<div class="cell tag_hide-cell docutils container">
-<details class="hide above-input">
-<summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell content</span>
+<span class="collapsed">Hide content</span>
 <span class="expanded">Hide code cell content</span>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">env</span> CUDA_VISIBLE_DEVICES=1
+<span class="o">!</span><span class="w"> </span>nvidia-smi<span class="w"> </span>-L
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>env: CUDA_VISIBLE_DEVICES=1
+zsh:1: command not found: nvidia-smi
 </pre></div>
 </div>
 </div>
@@ -163,10 +124,11 @@ GPU 1: NVIDIA A100 80GB PCIe (UUID: GPU-e54c2054-5be3-ebd0-e22e-b98441ec664f)
 </section>
 <section id="import-notebook-dependencies">
 <h2>Import Notebook Dependencies<a class="headerlink" href="#import-notebook-dependencies" title="Permalink to this heading">¶</a></h2>
+<p>The following imports are requires to run this notebook. See the repository <a class="reference external" href="https://github.com/matsengrp/SARS-CoV-2_spike_multidms#readme">README</a> for more instructions on how to run this notebook.</p>
 <div class="cell tag_hide-cell docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell content</span>
+<span class="collapsed">Hide content</span>
 <span class="expanded">Hide code cell content</span>
 </summary>
 <div class="cell_input docutils container">
@@ -193,17 +155,19 @@ GPU 1: NVIDIA A100 80GB PCIe (UUID: GPU-e54c2054-5be3-ebd0-e22e-b98441ec664f)
 <span class="kn">from</span> <span class="nn">mpl_toolkits.axes_grid1.inset_locator</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">BboxPatch</span><span class="p">,</span> <span class="n">BboxConnector</span><span class="p">,</span> <span class="n">BboxConnectorPatch</span><span class="p">)</span>
 <span class="kn">import</span> <span class="nn">matplotlib.patches</span> <span class="k">as</span> <span class="nn">patches</span>
+<span class="kn">import</span> <span class="nn">matplotlib.colors</span> <span class="k">as</span> <span class="nn">colors</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">tqdm.notebook</span> <span class="kn">import</span> <span class="n">tqdm</span>
 <span class="kn">import</span> <span class="nn">jax</span>
 <span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">jnp</span>
 <span class="kn">import</span> <span class="nn">multidms</span>
+<span class="o">%</span><span class="k">matplotlib</span> inline
 </pre></div>
 </div>
 </div>
 </details>
 </div>
-<p>This was run with the following multidms version</p>
+<p>This was notebook was run with the following <code class="docutils literal notranslate"><span class="pre">multidms</span></code> version</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">multidms</span><span class="o">.</span><span class="n">__version__</span>
@@ -220,15 +184,13 @@ GPU 1: NVIDIA A100 80GB PCIe (UUID: GPU-e54c2054-5be3-ebd0-e22e-b98441ec664f)
 <div class="cell tag_hide-cell docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell content</span>
+<span class="collapsed">Hide content</span>
 <span class="expanded">Hide code cell content</span>
 </summary>
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">OUTDIR</span> <span class="o">=</span> <span class="s2">&quot;../results/multidms02&quot;</span>
 <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">OUTDIR</span><span class="p">):</span> <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">OUTDIR</span><span class="p">)</span>
 
-<span class="o">%</span><span class="k">matplotlib</span> inline
-<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">OUTDIR</span><span class="p">):</span> <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">OUTDIR</span><span class="p">)</span>
 <span class="n">rc_kwargs</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;legend.frameon&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
     <span class="s2">&quot;font.size&quot;</span> <span class="p">:</span> <span class="mi">11</span><span class="p">,</span>
@@ -242,15 +204,13 @@ GPU 1: NVIDIA A100 80GB PCIe (UUID: GPU-e54c2054-5be3-ebd0-e22e-b98441ec664f)
 </details>
 </div>
 </section>
-<section id="prep-data">
-<h2>Prep Data<a class="headerlink" href="#prep-data" title="Permalink to this heading">¶</a></h2>
-<p><strong>Read in the funcational score dms data and prep it for fitting</strong></p>
-<p>We begin with 16 individual sets of functional scores from individual experimental replicates using either Delta, Omicron BA.1, or Omicron BA.2 as the experimental wildtype. First, we parse the filenames to get experimental attributes tied in with the individual datasets as nested pd.DataFrames</p>
+<section id="input-data">
+<h2>Input Data<a class="headerlink" href="#input-data" title="Permalink to this heading">¶</a></h2>
+<p>Load and organize the funcational score dms data.</p>
+<p>We begin with 16 individual sets of barcoded variants and their associated functional scores pre-computed. Each set derives from a single DMS experiment using one of Delta, Omicron BA.1, or Omicron BA.2 as the experimental wildtype. First, we parse the filenames to get experimental attributes tied in with the individual datasets as nested pd.DataFrames</p>
 <div class="cell tag_hide-output docutils container">
 <div class="cell_input above-output-prompt docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">func_score_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
-<span class="n">sites</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="n">wt_seqs</span> <span class="o">=</span> <span class="p">{}</span>
 
 <span class="k">for</span> <span class="n">homolog</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;Delta&quot;</span><span class="p">,</span> <span class="s2">&quot;Omicron_BA1&quot;</span><span class="p">,</span> <span class="s2">&quot;Omicron_BA2&quot;</span><span class="p">]:</span>
     
@@ -289,7 +249,7 @@ GPU 1: NVIDIA A100 80GB PCIe (UUID: GPU-e54c2054-5be3-ebd0-e22e-b98441ec664f)
 </div>
 <details class="hide below-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell output</span>
+<span class="collapsed">Hide output</span>
 <span class="expanded">Hide code cell output</span>
 </summary>
 <div class="cell_output docutils container">
@@ -591,7 +551,7 @@ GPU 1: NVIDIA A100 80GB PCIe (UUID: GPU-e54c2054-5be3-ebd0-e22e-b98441ec664f)
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
+<span class="collapsed">Hide source</span>
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
@@ -616,7 +576,7 @@ GPU 1: NVIDIA A100 80GB PCIe (UUID: GPU-e54c2054-5be3-ebd0-e22e-b98441ec664f)
 </div>
 </div>
 </div>
-<p>Concatentate each of the individual experiments, keeping track of the library and homolog of each</p>
+<p>Concatentate each of the individual experiments, keeping track of the library and homolog of each.</p>
 <div class="cell tag_hide-output docutils container">
 <div class="cell_input above-output-prompt docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">func_score_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
@@ -645,7 +605,7 @@ GPU 1: NVIDIA A100 80GB PCIe (UUID: GPU-e54c2054-5be3-ebd0-e22e-b98441ec664f)
 </div>
 <details class="hide below-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell output</span>
+<span class="collapsed">Hide output</span>
 <span class="expanded">Hide code cell output</span>
 </summary>
 <div class="cell_output docutils container">
@@ -684,7 +644,7 @@ memory usage: 173.2+ MB
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
+<span class="collapsed">Hide source</span>
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
@@ -705,7 +665,7 @@ memory usage: 173.2+ MB
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
+<span class="collapsed">Hide source</span>
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
@@ -735,7 +695,7 @@ memory usage: 173.2+ MB
 </div>
 <details class="hide below-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell output</span>
+<span class="collapsed">Hide output</span>
 <span class="expanded">Hide code cell output</span>
 </summary>
 <div class="cell_output docutils container">
@@ -750,7 +710,7 @@ memory usage: 173.2+ MB
 </div>
 </div>
 </div>
-<p>Next, we choose two representative biological replicates for each of the three homologs</p>
+<p>Choose two representative biological replicates for each of the three homologs.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">datasets</span> <span class="o">=</span> <span class="p">[]</span>
@@ -773,7 +733,7 @@ memory usage: 173.2+ MB
 </div>
 </div>
 </div>
-<p>Organize the two replicates</p>
+<p>Organize the two replicates and annotate replicates “1” and “2”. These each represent a distinct training set such that we may train replicate models and compare their results.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">func_score_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span>
@@ -790,11 +750,12 @@ memory usage: 173.2+ MB
 </section>
 <section id="variant-barcode-and-mutation-background-stats">
 <h2>Variant barcode and mutation background stats<a class="headerlink" href="#variant-barcode-and-mutation-background-stats" title="Permalink to this heading">¶</a></h2>
-<p>visualize the distribution of barcodes for each variant, as well as the number of genetic background each mutation appears in.</p>
+<p>In this section we briedly query and visualize charictaristics of the replicate training sets.</p>
+<p>Get the expected number substitutions per variant for each condition replicate.</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
+<span class="collapsed">Hide source</span>
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
@@ -815,10 +776,11 @@ Omicron_BA2 - rep 2 has 2.32827 subs per variant, on average
 </div>
 </div>
 </div>
+<p>Get the number of unique mutations seen in each condition replicate.</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
+<span class="collapsed">Hide source</span>
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
@@ -839,10 +801,11 @@ Omicron_BA2 - rep 2 has 57719
 </div>
 </div>
 </div>
+<p>Visualize the distribution of barcodes per variant, as well as the distribution of unique backgrounds per mutation.</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
+<span class="collapsed">Hide source</span>
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
@@ -988,13 +951,11 @@ Omicron_BA2 - rep 2 has 57719
 <img alt="_images/3c60d7ae9db6ac7aa4012a22c369b3d91d57853a353ea7e31c08af73a32af3ca.png" src="_images/3c60d7ae9db6ac7aa4012a22c369b3d91d57853a353ea7e31c08af73a32af3ca.png" />
 </div>
 </div>
-</section>
-<section id="functional-score-distributions">
-<h2>Functional score distributions<a class="headerlink" href="#functional-score-distributions" title="Permalink to this heading">¶</a></h2>
+<p>Plot the correlation of variant functional scores (averaged across barcodes) between replicates in each condition, as well as the full distribution of functional scores.</p>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
+<span class="collapsed">Hide source</span>
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
@@ -1137,9 +1098,10 @@ Omicron_BA2 - rep 2 has 57719
 </div>
 </div>
 </section>
-<section id="initialize-replicate-multidms-data-objects-for-fitting">
-<h2>Initialize replicate <code class="docutils literal notranslate"><span class="pre">multidms.Data</span></code> objects for fitting<a class="headerlink" href="#initialize-replicate-multidms-data-objects-for-fitting" title="Permalink to this heading">¶</a></h2>
-<p>next, we instaciate the two replicate objects, each with one set of three experiments across the three homologs</p>
+<section id="encode-data-for-fitting">
+<h2>Encode data for fitting<a class="headerlink" href="#encode-data-for-fitting" title="Permalink to this heading">¶</a></h2>
+<p>Next, we use the <code class="docutils literal notranslate"><span class="pre">multidms.Data</span></code> class to prep our data for fitting.</p>
+<p>Instantiate an object for each of our two replicate training sets, and append them to a list</p>
 <div class="cell tag_hide-output docutils container">
 <div class="cell_input above-output-prompt docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">datasets</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1168,7 +1130,7 @@ Omicron_BA2 - rep 2 has 57719
 </div>
 <details class="hide below-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell output</span>
+<span class="collapsed">Hide output</span>
 <span class="expanded">Hide code cell output</span>
 </summary>
 <div class="cell_output docutils container">
@@ -1231,17 +1193,15 @@ Converting mutations for Omicron_BA2
 </div>
 </details>
 </div>
-<p><strong>Change the datasets colors - the only mutible thing about <code class="docutils literal notranslate"><span class="pre">Data</span></code> Objects</strong></p>
+<p>Change the datasets colors - the only mutible thing about <code class="docutils literal notranslate"><span class="pre">Data</span></code> Objects.</p>
 <div class="cell tag_hide-cell docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell content</span>
+<span class="collapsed">Hide content</span>
 <span class="expanded">Hide code cell content</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.colors</span> <span class="k">as</span> <span class="nn">colors</span>
-
-<span class="n">palette</span> <span class="o">=</span> <span class="p">[</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">palette</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s1">&#39;#F97306&#39;</span><span class="p">,</span><span class="c1">#, &#39;#FFA500&#39;,</span>
     <span class="s1">&#39;#BFBFBF&#39;</span><span class="p">,</span><span class="c1">#,&#39;#404040&#39;, </span>
     <span class="s1">&#39;#9400D3&#39;</span><span class="c1">#, &#39;#EE82EE&#39;,</span>
@@ -1264,9 +1224,16 @@ Converting mutations for Omicron_BA2
 </details>
 </div>
 </section>
-<section id="shrinkage-analysis">
-<h2>Shrinkage Analysis<a class="headerlink" href="#shrinkage-analysis" title="Permalink to this heading">¶</a></h2>
-<p>For each replicate, fit a set models with variable lasso strength coefficients</p>
+<section id="fit-models-shrinkage-analysis">
+<h2>Fit Models (Shrinkage Analysis)<a class="headerlink" href="#fit-models-shrinkage-analysis" title="Permalink to this heading">¶</a></h2>
+<p>For each replicate training set, initialize and fit a set models with variable lasso strength coefficients. Here, we use the <code class="docutils literal notranslate"><span class="pre">multidms.utils.fit_wrapper</span></code> function to handle the instatiation, and parameter fitting. Expand the cell output below to view the function docstring.</p>
+<div class="cell tag_hide-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">help</span><span class="p">(</span><span class="n">multidms</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">fit_wrapper</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
 <div class="cell tag_hide-output docutils container">
 <div class="cell_input above-output-prompt docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">models</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
@@ -1310,7 +1277,7 @@ Converting mutations for Omicron_BA2
 </div>
 <details class="hide below-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell output</span>
+<span class="collapsed">Hide output</span>
 <span class="expanded">Hide code cell output</span>
 </summary>
 <div class="cell_output docutils container">
@@ -2215,21 +2182,21 @@ Done with 16/10! Total time: 425
 </div>
 </details>
 </div>
+<p>The cell above saves the models and their relevant hyper-parameters to a pickle binary file. If it’s already been run, and you want to execute the code below without re-fitting, the following cell will load that binary file.</p>
 <div class="cell tag_hide-cell docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell content</span>
+<span class="collapsed">Hide content</span>
 <span class="expanded">Hide code cell content</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># extry point</span>
-<span class="n">models</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">OUTDIR</span><span class="si">}</span><span class="s2">/models.pkl&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">))</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">models</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">OUTDIR</span><span class="si">}</span><span class="s2">/models.pkl&quot;</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
 </details>
 </div>
-<p>We have now fit 8 models per replicate, each with a different lasso strength</p>
+<p>We have now fit 8 models per replicate, each with a different lasso strength. These data are organized into a dataframe, where the column “model_30000” contains a reference to the respective <code class="docutils literal notranslate"><span class="pre">multidms.Model</span></code> Object.</p>
 <div class="cell tag_hide-output docutils container">
 <div class="cell_input above-output-prompt docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">models</span>
@@ -2238,7 +2205,7 @@ Done with 16/10! Total time: 425
 </div>
 <details class="hide below-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell output</span>
+<span class="collapsed">Hide output</span>
 <span class="expanded">Hide code cell output</span>
 </summary>
 <div class="cell_output docutils container">
@@ -2674,14 +2641,11 @@ Done with 16/10! Total time: 425
 </div></div></div>
 </details>
 </div>
-</section>
-<section id="convergence">
-<h2>Convergence<a class="headerlink" href="#convergence" title="Permalink to this heading">¶</a></h2>
-<p>Plot the loss over training epochs</p>
+<p>Using the <code class="docutils literal notranslate"><span class="pre">fit_wrapper</span></code>, we have trained</p>
 <div class="cell tag_hide-cell docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell content</span>
+<span class="collapsed">Hide content</span>
 <span class="expanded">Hide code cell content</span>
 </summary>
 <div class="cell_input docutils container">
@@ -2696,7 +2660,7 @@ Done with 16/10! Total time: 425
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
+<span class="collapsed">Hide source</span>
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
@@ -2760,7 +2724,7 @@ Done with 16/10! Total time: 425
 <div class="cell tag_hide-cell docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell content</span>
+<span class="collapsed">Hide content</span>
 <span class="expanded">Hide code cell content</span>
 </summary>
 <div class="cell_input docutils container">
@@ -2953,7 +2917,7 @@ Done with 16/10! Total time: 425
 <div class="cell tag_hide-cell docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell content</span>
+<span class="collapsed">Hide content</span>
 <span class="expanded">Hide code cell content</span>
 </summary>
 <div class="cell_input docutils container">
@@ -3299,7 +3263,7 @@ Done with 16/10! Total time: 425
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
+<span class="collapsed">Hide source</span>
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
@@ -3619,7 +3583,7 @@ Done with 16/10! Total time: 425
 <div class="cell tag_hide-cell docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell content</span>
+<span class="collapsed">Hide content</span>
 <span class="expanded">Hide code cell content</span>
 </summary>
 <div class="cell_input docutils container">
@@ -3650,7 +3614,7 @@ Done with 16/10! Total time: 425
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
+<span class="collapsed">Hide source</span>
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
@@ -3821,7 +3785,7 @@ Name: Omicron_BA2, dtype: float64
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
+<span class="collapsed">Hide source</span>
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
@@ -3903,7 +3867,7 @@ Name: Omicron_BA2, dtype: float64
 <div class="cell tag_hide-cell docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell content</span>
+<span class="collapsed">Hide content</span>
 <span class="expanded">Hide code cell content</span>
 </summary>
 <div class="cell_input docutils container">
@@ -3926,7 +3890,7 @@ Name: Omicron_BA2, dtype: float64
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
+<span class="collapsed">Hide source</span>
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
@@ -3986,7 +3950,7 @@ Name: Omicron_BA2, dtype: float64
 <div class="cell tag_hide-cell docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell content</span>
+<span class="collapsed">Hide content</span>
 <span class="expanded">Hide code cell content</span>
 </summary>
 <div class="cell_input docutils container">
@@ -4008,7 +3972,7 @@ Name: Omicron_BA2, dtype: float64
 <div class="cell tag_hide-cell docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell content</span>
+<span class="collapsed">Hide content</span>
 <span class="expanded">Hide code cell content</span>
 </summary>
 <div class="cell_input docutils container">
@@ -4025,7 +3989,7 @@ Name: Omicron_BA2, dtype: float64
 <div class="cell tag_hide-cell docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell content</span>
+<span class="collapsed">Hide content</span>
 <span class="expanded">Hide code cell content</span>
 </summary>
 <div class="cell_input docutils container">
@@ -4040,7 +4004,7 @@ Name: Omicron_BA2, dtype: float64
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
+<span class="collapsed">Hide source</span>
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
@@ -4446,7 +4410,7 @@ Name: Omicron_BA2, dtype: float64
 </div>
 <details class="hide below-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell output</span>
+<span class="collapsed">Hide output</span>
 <span class="expanded">Hide code cell output</span>
 </summary>
 <div class="cell_output docutils container">
@@ -4524,7 +4488,7 @@ Name: Omicron_BA2, dtype: float64
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
+<span class="collapsed">Hide source</span>
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
@@ -4782,7 +4746,7 @@ Name: Omicron_BA2, dtype: float64
 </div>
 <details class="hide below-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell output</span>
+<span class="collapsed">Hide output</span>
 <span class="expanded">Hide code cell output</span>
 </summary>
 <div class="cell_output docutils container">
@@ -5060,7 +5024,7 @@ Done! Total time: 19
 </div>
 <details class="hide below-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell output</span>
+<span class="collapsed">Hide output</span>
 <span class="expanded">Hide code cell output</span>
 </summary>
 <div class="cell_output docutils container">
@@ -5363,7 +5327,7 @@ Done! Total time: 19
 </div>
 <details class="hide below-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell output</span>
+<span class="collapsed">Hide output</span>
 <span class="expanded">Hide code cell output</span>
 </summary>
 <div class="cell_output docutils container">
@@ -5706,7 +5670,7 @@ Done! Total time: 19
 <div class="cell tag_hide-cell docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell content</span>
+<span class="collapsed">Hide content</span>
 <span class="expanded">Hide code cell content</span>
 </summary>
 <div class="cell_input docutils container">
@@ -5727,7 +5691,7 @@ Done! Total time: 19
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
+<span class="collapsed">Hide source</span>
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
@@ -6192,7 +6156,7 @@ Done! Total time: 19
 </div>
 <details class="hide below-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell output</span>
+<span class="collapsed">Hide output</span>
 <span class="expanded">Hide code cell output</span>
 </summary>
 <div class="cell_output docutils container">
@@ -6564,7 +6528,7 @@ training_step 15/30,Loss: 0.7169945389079592, Time: 17 Seconds
 </div>
 <details class="hide below-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell output</span>
+<span class="collapsed">Hide output</span>
 <span class="expanded">Hide code cell output</span>
 </summary>
 <div class="cell_output docutils container">
@@ -6686,7 +6650,7 @@ training_step 15/30,Loss: 0.7169945389079592, Time: 17 Seconds
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell source</span>
+<span class="collapsed">Hide source</span>
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
@@ -6825,12 +6789,10 @@ training_step 15/30,Loss: 0.7169945389079592, Time: 17 Seconds
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Spike Analysis</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#computational-platform-attributes">Computational platform attributes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#import-notebook-dependencies">Import Notebook Dependencies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#prep-data">Prep Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#input-data">Input Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#variant-barcode-and-mutation-background-stats">Variant barcode and mutation background stats</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#functional-score-distributions">Functional score distributions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#initialize-replicate-multidms-data-objects-for-fitting">Initialize replicate <code class="docutils literal notranslate"><span class="pre">multidms.Data</span></code> objects for fitting</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#shrinkage-analysis">Shrinkage Analysis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#convergence">Convergence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#encode-data-for-fitting">Encode data for fitting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fit-models-shrinkage-analysis">Fit Models (Shrinkage Analysis)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#global-epistasis-fits">Global epistasis fits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#percent-shifts-under-x">Percent Shifts Under X</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#correlation-of-ba2-and-delta-shifts">Correlation of BA2 and Delta Shifts</a></li>
