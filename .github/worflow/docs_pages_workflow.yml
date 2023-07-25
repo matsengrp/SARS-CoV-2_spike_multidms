@@ -35,8 +35,7 @@ jobs:
       
     - name: Build 🔧
       run: |
-        make -C docs clean
-        make -C docs html
+          make clean && make html
   
     - name: Deploy 🚀
       uses: JamesIves/github-pages-deploy-action@v4
