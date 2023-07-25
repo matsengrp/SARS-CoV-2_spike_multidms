@@ -35,12 +35,12 @@ jobs:
       
     - name: Build 🔧
       run: |
-          make clean
-          make html
+        make -C docs clean
+        make -C docs html
   
     - name: Deploy 🚀
       uses: JamesIves/github-pages-deploy-action@v4
       with:
         branch: gh-pages
-        folder: build/html
+        folder: docs/_build/html
       
