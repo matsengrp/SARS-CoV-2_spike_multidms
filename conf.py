@@ -47,6 +47,8 @@ extensions = [
 ]
 # jupyter_execute_notebooks = "off"
 nb_execution_mode = "off"
+nb_code_prompt_show = "Show {type}"
+nb_code_prompt_show = "Hide {type}"
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
