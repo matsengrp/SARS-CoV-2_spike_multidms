@@ -42,6 +42,7 @@ extensions = [
     # "sphinx.ext.doctest",
     # "sphinx.ext.ifconfig",
     "sphinx.ext.githubpages",
+    "sphinx_togglebutton",
     "myst_nb",
 ]
 # jupyter_execute_notebooks = "off"
