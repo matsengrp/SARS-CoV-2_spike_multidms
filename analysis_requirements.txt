@@ -1,4 +1,6 @@
 multidms==0.2.0
+notebook
+ipywidgets
 scipy
 numpy
 pandas
