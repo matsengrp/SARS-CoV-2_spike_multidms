@@ -9,7 +9,7 @@ The purpose of this is two-fold:
 for code availability and reproducibility of our manuscript analysis,
 and as an example of how the `multidms` API might be used in your own analysis.
 
-The source code for this page, as well as the relevant instructions to run the
+The source code for this page, key data files, as well as the relevant instructions to run the
 analysis yourself, can be found at 
 https://github.com/matsengrp/SARS-CoV-2_spike_multidms
 

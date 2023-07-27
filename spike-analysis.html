@@ -44,6 +44,7 @@
   <section id="spike-analysis">
 <h1>Spike Analysis<a class="headerlink" href="#spike-analysis" title="Permalink to this heading">¶</a></h1>
 <p>This notebook contains the entire analysis seen in our manuscript <em>Jointly modeling deep mutational scans identifies shifted mutational effects among SARS-CoV-2 spike homologs</em>. Some cell’s input, output, or both are hidden for brevity - you may toggle the contents using the drop down bars.</p>
+<p>See the repository <a class="reference external" href="https://github.com/matsengrp/SARS-CoV-2_spike_multidms#readme">README</a> for more instructions on how to run this notebook.</p>
 <section id="computational-platform-environment">
 <h2>Computational platform environment<a class="headerlink" href="#computational-platform-environment" title="Permalink to this heading">¶</a></h2>
 <p>This section shows the attributes of the machine which ran this notebook, as well as imports the necessary dependencies.</p>
@@ -61,7 +62,7 @@
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>NAME=&quot;Ubuntu&quot;
-VERSION=&quot;18.04.6 LTS (Bionic Beaver)&quot;
+VERSION=&quot;20.04.3 LTS (Focal Fossa)&quot;
 </pre></div>
 </div>
 </div>
@@ -84,16 +85,35 @@ VERSION=&quot;18.04.6 LTS (Bionic Beaver)&quot;
   *-memory                  
        description: System memory
        physical id: 0
-       size: 996GiB
-  *-cpu
-       product: AMD EPYC 75F3 32-Core Processor
-       vendor: Advanced Micro Devices [AMD]
+       size: 25GiB
+  *-cpu:0
+       product: Intel(R) Xeon(R) W-10855M CPU @ 2.80GHz
+       vendor: Intel Corp.
        physical id: 1
        bus info: cpu@0
-       size: 1498MHz
-       capacity: 2950MHz
        width: 64 bits
-       capabilities: fpu fpu_exception wp vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp x86-64 constant_tsc rep_good nopl xtopology nonstop_tsc cpuid extd_apicid aperfmperf pni pclmulqdq monitor ssse3 fma cx16 pcid sse4_1 sse4_2 movbe popcnt aes xsave avx f16c rdrand lahf_lm cmp_legacy svm extapic cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw ibs skinit wdt tce topoext perfctr_core perfctr_nb bpext perfctr_llc mwaitx cpb cat_l3 cdp_l3 invpcid_single hw_pstate ssbd ibrs ibpb stibp vmmcall fsgsbase bmi1 avx2 smep bmi2 invpcid cqm rdt_a rdseed adx smap clflushopt clwb sha_ni xsaveopt xsavec xgetbv1 xsaves cqm_llc cqm_occup_llc cqm_mbm_total cqm_mbm_local clzero irperf xsaveerptr arat npt lbrv svm_lock nrip_save tsc_scale vmcb_clean flushbyasid decodeassists pausefilter pfthreshold v_vmsave_vmload vgif umip pku ospke vaes vpclmulqdq rdpid overflow_recov succor smca cpufreq
+       capabilities: fpu fpu_exception wp vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ss syscall nx pdpe1gb rdtscp x86-64 constant_tsc arch_perfmon nopl xtopology tsc_reliable nonstop_tsc cpuid pni pclmulqdq ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm abm 3dnowprefetch cpuid_fault invpcid_single ssbd ibrs ibpb stibp ibrs_enhanced fsgsbase tsc_adjust bmi1 avx2 smep bmi2 invpcid rdseed adx smap clflushopt xsaveopt xsavec xsaves arat pku ospke md_clear flush_l1d arch_capabilities
+  *-cpu:1
+       product: Intel(R) Xeon(R) W-10855M CPU @ 2.80GHz
+       vendor: Intel Corp.
+       physical id: 2
+       bus info: cpu@1
+       width: 64 bits
+       capabilities: fpu fpu_exception wp vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ss syscall nx pdpe1gb rdtscp x86-64 constant_tsc arch_perfmon nopl xtopology tsc_reliable nonstop_tsc cpuid pni pclmulqdq ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm abm 3dnowprefetch cpuid_fault invpcid_single ssbd ibrs ibpb stibp ibrs_enhanced fsgsbase tsc_adjust bmi1 avx2 smep bmi2 invpcid rdseed adx smap clflushopt xsaveopt xsavec xsaves arat pku ospke md_clear flush_l1d arch_capabilities
+  *-cpu:2
+       product: Intel(R) Xeon(R) W-10855M CPU @ 2.80GHz
+       vendor: Intel Corp.
+       physical id: 3
+       bus info: cpu@2
+       width: 64 bits
+       capabilities: fpu fpu_exception wp vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ss syscall nx pdpe1gb rdtscp x86-64 constant_tsc arch_perfmon nopl xtopology tsc_reliable nonstop_tsc cpuid pni pclmulqdq ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm abm 3dnowprefetch cpuid_fault invpcid_single ssbd ibrs ibpb stibp ibrs_enhanced fsgsbase tsc_adjust bmi1 avx2 smep bmi2 invpcid rdseed adx smap clflushopt xsaveopt xsavec xsaves arat pku ospke md_clear flush_l1d arch_capabilities
+  *-cpu:3
+       product: Intel(R) Xeon(R) W-10855M CPU @ 2.80GHz
+       vendor: Intel Corp.
+       physical id: 4
+       bus info: cpu@3
+       width: 64 bits
+       capabilities: fpu fpu_exception wp vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ss syscall nx pdpe1gb rdtscp x86-64 constant_tsc arch_perfmon nopl xtopology tsc_reliable nonstop_tsc cpuid pni pclmulqdq ssse3 fma cx16 pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm abm 3dnowprefetch cpuid_fault invpcid_single ssbd ibrs ibpb stibp ibrs_enhanced fsgsbase tsc_adjust bmi1 avx2 smep bmi2 invpcid rdseed adx smap clflushopt xsaveopt xsavec xsaves arat pku ospke md_clear flush_l1d arch_capabilities
 WARNING: output may be incomplete or inaccurate, you should run this program as super-user.
 </pre></div>
 </div>
@@ -115,14 +135,12 @@ WARNING: output may be incomplete or inaccurate, you should run this program as 
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>env: CUDA_VISIBLE_DEVICES=0
-GPU 0: NVIDIA A100 80GB PCIe (UUID: GPU-414cb1bd-372a-4926-b140-b734687c927f)
-GPU 1: NVIDIA A100 80GB PCIe (UUID: GPU-e54c2054-5be3-ebd0-e22e-b98441ec664f)
+zsh:1: command not found: nvidia-smi
 </pre></div>
 </div>
 </div>
 </details>
 </div>
-<p>The following imports are requires to run this notebook. See the repository <a class="reference external" href="https://github.com/matsengrp/SARS-CoV-2_spike_multidms#readme">README</a> for more instructions on how to run this notebook.</p>
 <div class="cell tag_hide-cell docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -155,9 +173,15 @@ GPU 1: NVIDIA A100 80GB PCIe (UUID: GPU-e54c2054-5be3-ebd0-e22e-b98441ec664f)
 <span class="kn">import</span> <span class="nn">matplotlib.patches</span> <span class="k">as</span> <span class="nn">patches</span>
 <span class="kn">import</span> <span class="nn">matplotlib.colors</span> <span class="k">as</span> <span class="nn">colors</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">scipy</span>
 <span class="kn">from</span> <span class="nn">tqdm.notebook</span> <span class="kn">import</span> <span class="n">tqdm</span>
 <span class="kn">import</span> <span class="nn">jax</span>
 <span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">jnp</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">from</span> <span class="nn">Bio.PDB.PDBParser</span> <span class="kn">import</span> <span class="n">PDBParser</span>
+<span class="kn">from</span> <span class="nn">Bio.PDB.PDBList</span> <span class="kn">import</span> <span class="n">PDBList</span>
+<span class="kn">from</span> <span class="nn">Bio.PDB.DSSP</span> <span class="kn">import</span> <span class="n">DSSP</span>
+<span class="kn">from</span> <span class="nn">Bio</span> <span class="kn">import</span> <span class="n">SeqIO</span>
 <span class="kn">import</span> <span class="nn">multidms</span>
 <span class="o">%</span><span class="k">matplotlib</span> inline
 </pre></div>
@@ -165,7 +189,7 @@ GPU 1: NVIDIA A100 80GB PCIe (UUID: GPU-e54c2054-5be3-ebd0-e22e-b98441ec664f)
 </div>
 </details>
 </div>
-<p>This was notebook was run with the following <code class="docutils literal notranslate"><span class="pre">multidms</span></code> version</p>
+<p>This was notebook was run with the following <code class="docutils literal notranslate"><span class="pre">multidms</span></code> version.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">multidms</span><span class="o">.</span><span class="n">__version__</span>
@@ -178,7 +202,7 @@ GPU 1: NVIDIA A100 80GB PCIe (UUID: GPU-e54c2054-5be3-ebd0-e22e-b98441ec664f)
 </div>
 </div>
 </div>
-<p>set some global configurations for plotting</p>
+<p>Set some global configurations for plotting.</p>
 <div class="cell tag_hide-cell docutils container">
 <details class="hide above-input">
 <summary aria-label="Toggle hidden content">
@@ -455,7 +479,7 @@ GPU 1: NVIDIA A100 80GB PCIe (UUID: GPU-e54c2054-5be3-ebd0-e22e-b98441ec664f)
 </div>
 </details>
 <div class="cell_output docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "d67dfd5852284cc8811965cd2a90419f", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "e9e6dc09e031403db745ae85625453f9", "version_major": 2, "version_minor": 0}</script><div class="output text_html"><div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
@@ -625,9 +649,9 @@ GPU 1: NVIDIA A100 80GB PCIe (UUID: GPU-e54c2054-5be3-ebd0-e22e-b98441ec664f)
 </div>
 </details>
 <div class="cell_output docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "aa6eea604bc046b29782cd1018d949d7", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "040a84c6d7eb451898730b1c050a8bfe", "version_major": 2, "version_minor": 0}</script></div>
 </div>
-<p>We clip all functional scores at a lower bound of $-3.5$, and an upper bound of $2.5$.</p>
+<p>We clip all functional scores at a lower bound of -3.5, and an upper bound of 2.5.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_below_clip</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">func_score_df</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;func_score &lt; -3.5&quot;</span><span class="p">))</span>
@@ -716,88 +740,95 @@ GPU 1: NVIDIA A100 80GB PCIe (UUID: GPU-e54c2054-5be3-ebd0-e22e-b98441ec664f)
   </thead>
   <tbody>
     <tr>
-      <th>264399</th>
-      <td>-2.7549</td>
-      <td>D88N G769D I934- S943P</td>
-      <td>Delta</td>
-      <td>1</td>
-      <td>4</td>
-    </tr>
-    <tr>
-      <th>215704</th>
-      <td>-2.4872</td>
-      <td>A93V Q1113H</td>
-      <td>Delta</td>
-      <td>2</td>
-      <td>2</td>
-    </tr>
-    <tr>
-      <th>809854</th>
-      <td>0.4081</td>
-      <td>P384V</td>
+      <th>1071040</th>
+      <td>0.0505</td>
+      <td>I105T N1023T D1127E</td>
       <td>Omicron_BA2</td>
-      <td>1</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>1008839</th>
-      <td>-3.5000</td>
-      <td>G75F N751I G769E V963A S1123F W1214L</td>
-      <td>Omicron_BA2</td>
-      <td>1</td>
-      <td>6</td>
-    </tr>
-    <tr>
-      <th>693546</th>
-      <td>0.4095</td>
-      <td>T1076I</td>
-      <td>Omicron_BA1</td>
-      <td>2</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>978273</th>
-      <td>-1.7245</td>
-      <td>Q690L D1199H</td>
-      <td>Omicron_BA2</td>
-      <td>1</td>
-      <td>2</td>
-    </tr>
-    <tr>
-      <th>611369</th>
-      <td>0.7213</td>
-      <td>T299I D936A</td>
-      <td>Omicron_BA1</td>
-      <td>1</td>
-      <td>2</td>
-    </tr>
-    <tr>
-      <th>674921</th>
-      <td>-0.5282</td>
-      <td>I212T K679L D1199N</td>
-      <td>Omicron_BA1</td>
       <td>2</td>
       <td>3</td>
     </tr>
     <tr>
-      <th>565088</th>
-      <td>-3.3553</td>
-      <td>T76* D138R I212F N448T</td>
-      <td>Omicron_BA1</td>
-      <td>1</td>
-      <td>4</td>
+      <th>880651</th>
+      <td>-1.0075</td>
+      <td>D1084E L1200I</td>
+      <td>Omicron_BA2</td>
+      <td>2</td>
+      <td>2</td>
     </tr>
     <tr>
-      <th>539967</th>
-      <td>0.0536</td>
-      <td>L176S N481K</td>
+      <th>901472</th>
+      <td>-0.1839</td>
+      <td>S1037N</td>
+      <td>Omicron_BA2</td>
+      <td>2</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>801311</th>
+      <td>-1.1914</td>
+      <td>T33I D936H</td>
+      <td>Omicron_BA2</td>
+      <td>1</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>908179</th>
+      <td>-2.5949</td>
+      <td>D339P Y655A D1168V</td>
+      <td>Omicron_BA2</td>
+      <td>2</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>172050</th>
+      <td>-2.7820</td>
+      <td>R19K T95* V159I R237K R452M A845V</td>
+      <td>Delta</td>
+      <td>2</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>882804</th>
+      <td>0.6012</td>
+      <td>H954D</td>
+      <td>Omicron_BA2</td>
+      <td>2</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>178845</th>
+      <td>-3.5000</td>
+      <td>L8M G446S S605N L1063V I1081F</td>
+      <td>Delta</td>
+      <td>2</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>631205</th>
+      <td>-1.7408</td>
+      <td>S254G S939P</td>
       <td>Omicron_BA1</td>
       <td>1</td>
       <td>2</td>
     </tr>
+    <tr>
+      <th>724691</th>
+      <td>0.1839</td>
+      <td>I95T</td>
+      <td>Omicron_BA1</td>
+      <td>2</td>
+      <td>1</td>
+    </tr>
   </tbody>
 </table>
 </div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">func_score_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;results/training_functional_scores.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
 </div>
 </section>
 <section id="variant-barcode-and-mutation-background-stats">
@@ -7156,6 +7187,850 @@ training_step 15/30,Loss: 0.7169945389079592, Time: 17 Seconds
 </div>
 </div>
 </section>
+<section id="structural-analysis">
+<h2>Structural Analysis<a class="headerlink" href="#structural-analysis" title="Permalink to this heading">¶</a></h2>
+<p>Read in mutational effects</p>
+<div class="cell tag_hide-cell docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show content</span>
+<span class="expanded">Hide content</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mut_df_replicates</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">OUTDIR</span><span class="si">}</span><span class="s2">/mutations_df.csv&quot;</span><span class="p">)</span>
+<span class="n">mut_df_replicates</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span>
+    <span class="n">col</span> <span class="p">:</span> <span class="n">col</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;Omicron_BA2&#39;</span><span class="p">,</span> <span class="s1">&#39;BA2&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">mut_df_replicates</span>
+<span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">mut_df_replicates</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>mutation</th>
+      <th>wts</th>
+      <th>sites</th>
+      <th>muts</th>
+      <th>0_beta</th>
+      <th>1_beta</th>
+      <th>avg_beta</th>
+      <th>0_shift_Delta</th>
+      <th>1_shift_Delta</th>
+      <th>avg_shift_Delta</th>
+      <th>0_predicted_func_score</th>
+      <th>1_predicted_func_score</th>
+      <th>avg_predicted_func_score</th>
+      <th>0_shift_BA2</th>
+      <th>1_shift_BA2</th>
+      <th>avg_shift_BA2</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>M1I</td>
+      <td>M</td>
+      <td>1</td>
+      <td>I</td>
+      <td>-2.755360</td>
+      <td>-4.943197</td>
+      <td>-3.849278</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>-3.231755</td>
+      <td>-3.367304</td>
+      <td>-3.299529</td>
+      <td>-0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>F2L</td>
+      <td>F</td>
+      <td>2</td>
+      <td>L</td>
+      <td>0.188683</td>
+      <td>0.214562</td>
+      <td>0.201623</td>
+      <td>-0.000000</td>
+      <td>-0.000000</td>
+      <td>0.000000</td>
+      <td>-1.609024</td>
+      <td>-1.301885</td>
+      <td>-1.455455</td>
+      <td>-0.184437</td>
+      <td>0.000000</td>
+      <td>-0.092218</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>F2S</td>
+      <td>F</td>
+      <td>2</td>
+      <td>S</td>
+      <td>0.188578</td>
+      <td>-0.074652</td>
+      <td>0.056963</td>
+      <td>-0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>-1.336347</td>
+      <td>-1.740480</td>
+      <td>-1.538414</td>
+      <td>0.000000</td>
+      <td>-0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>F2V</td>
+      <td>F</td>
+      <td>2</td>
+      <td>V</td>
+      <td>0.203996</td>
+      <td>0.017819</td>
+      <td>0.110907</td>
+      <td>-0.000009</td>
+      <td>-0.000000</td>
+      <td>-0.000005</td>
+      <td>-1.312262</td>
+      <td>-1.609005</td>
+      <td>-1.460634</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>V3A</td>
+      <td>V</td>
+      <td>3</td>
+      <td>A</td>
+      <td>-0.016783</td>
+      <td>-0.045525</td>
+      <td>-0.031154</td>
+      <td>-0.000000</td>
+      <td>-0.000000</td>
+      <td>0.000000</td>
+      <td>-1.638335</td>
+      <td>-1.699940</td>
+      <td>-1.669137</td>
+      <td>-0.000000</td>
+      <td>-0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>5929</th>
+      <td>S1252T</td>
+      <td>S</td>
+      <td>1252</td>
+      <td>T</td>
+      <td>-0.130752</td>
+      <td>-0.192505</td>
+      <td>-0.161628</td>
+      <td>-0.000000</td>
+      <td>-0.000000</td>
+      <td>0.000000</td>
+      <td>-1.876513</td>
+      <td>-1.896484</td>
+      <td>-1.886498</td>
+      <td>-0.067849</td>
+      <td>-0.000000</td>
+      <td>-0.033924</td>
+    </tr>
+    <tr>
+      <th>5930</th>
+      <td>S1252V</td>
+      <td>S</td>
+      <td>1252</td>
+      <td>V</td>
+      <td>0.154626</td>
+      <td>0.178750</td>
+      <td>0.166688</td>
+      <td>0.250819</td>
+      <td>-0.187264</td>
+      <td>0.031777</td>
+      <td>-1.445278</td>
+      <td>-1.530436</td>
+      <td>-1.487857</td>
+      <td>-0.037420</td>
+      <td>-0.108238</td>
+      <td>-0.072829</td>
+    </tr>
+    <tr>
+      <th>5931</th>
+      <td>S1252W</td>
+      <td>S</td>
+      <td>1252</td>
+      <td>W</td>
+      <td>0.076877</td>
+      <td>0.285857</td>
+      <td>0.181367</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>-1.504959</td>
+      <td>-1.245907</td>
+      <td>-1.375433</td>
+      <td>0.000000</td>
+      <td>-0.037846</td>
+      <td>-0.018923</td>
+    </tr>
+    <tr>
+      <th>5932</th>
+      <td>S1252Y</td>
+      <td>S</td>
+      <td>1252</td>
+      <td>Y</td>
+      <td>0.336228</td>
+      <td>0.471705</td>
+      <td>0.403966</td>
+      <td>-0.094418</td>
+      <td>-0.231065</td>
+      <td>-0.162742</td>
+      <td>-1.132958</td>
+      <td>-1.179122</td>
+      <td>-1.156040</td>
+      <td>-0.021132</td>
+      <td>-0.184621</td>
+      <td>-0.102876</td>
+    </tr>
+    <tr>
+      <th>5933</th>
+      <td>S1252*</td>
+      <td>S</td>
+      <td>1252</td>
+      <td>*</td>
+      <td>-0.070599</td>
+      <td>-0.003073</td>
+      <td>-0.036836</td>
+      <td>0.000000</td>
+      <td>0.059310</td>
+      <td>0.029655</td>
+      <td>-1.565056</td>
+      <td>-1.737305</td>
+      <td>-1.651180</td>
+      <td>0.105908</td>
+      <td>-0.069276</td>
+      <td>0.018316</td>
+    </tr>
+  </tbody>
+</table>
+<p>5934 rows × 16 columns</p>
+</div></div></div>
+</details>
+</div>
+<p>Compute site-wise summary statistics</p>
+<div class="cell tag_hide-cell docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show content</span>
+<span class="expanded">Hide content</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cols_to_collapse</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">mut_df_replicates</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="s2">&quot;avg_&quot;</span> <span class="ow">in</span> <span class="n">col</span><span class="p">]</span>
+<span class="n">cols_to_collapse</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;sites&#39;</span><span class="p">])</span> <span class="c1">#, &#39;BA1_wt&#39;, &#39;BA2_wt&#39;, &#39;Delta_wt&#39;, &#39;is_BA2_wt&#39;, &#39;is_Delta_wt&#39;])</span>
+<span class="n">shifts_by_site</span> <span class="o">=</span> <span class="n">mut_df_replicates</span><span class="p">[</span><span class="n">cols_to_collapse</span><span class="p">]</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;sites&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span>
+    <span class="n">max_abs_S_BA2</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;avg_shift_BA2&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span><span class="p">))),</span>
+    <span class="n">max_abs_S_Delta</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;avg_shift_Delta&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span><span class="p">))),</span>
+    
+    <span class="n">mean_abs_S_BA2</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;avg_shift_BA2&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span><span class="p">))),</span>
+    <span class="n">mean_abs_S_Delta</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;avg_shift_Delta&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span><span class="p">))),</span>
+    
+    <span class="n">mean_S_BA2</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;avg_shift_BA2&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">),</span>
+    <span class="n">mean_S_Delta</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;avg_shift_Delta&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">),</span>
+    
+    <span class="n">sum_S_BA2</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;avg_shift_BA2&#39;</span><span class="p">,</span>  <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">),</span>
+    <span class="n">sum_S_Delta</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;avg_shift_Delta&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="n">shifts_by_site</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">shifts_by_site</span><span class="p">[</span><span class="s2">&quot;res_n&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">shifts_by_site</span><span class="p">[</span><span class="s2">&quot;sites&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">shifts_by_site</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>sites</th>
+      <th>max_abs_S_BA2</th>
+      <th>max_abs_S_Delta</th>
+      <th>mean_abs_S_BA2</th>
+      <th>mean_abs_S_Delta</th>
+      <th>mean_S_BA2</th>
+      <th>mean_S_Delta</th>
+      <th>sum_S_BA2</th>
+      <th>sum_S_Delta</th>
+      <th>res_n</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>0.092218</td>
+      <td>0.000005</td>
+      <td>0.030739</td>
+      <td>0.000002</td>
+      <td>-0.030739</td>
+      <td>-0.000002</td>
+      <td>-0.092218</td>
+      <td>-0.000005</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>0.109558</td>
+      <td>0.080911</td>
+      <td>0.038917</td>
+      <td>0.014263</td>
+      <td>0.033630</td>
+      <td>0.012707</td>
+      <td>0.201777</td>
+      <td>0.076245</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4</td>
+      <td>0.061545</td>
+      <td>0.117023</td>
+      <td>0.021648</td>
+      <td>0.041205</td>
+      <td>-0.021648</td>
+      <td>-0.036810</td>
+      <td>-0.064943</td>
+      <td>-0.110430</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5</td>
+      <td>0.678796</td>
+      <td>0.281289</td>
+      <td>0.084177</td>
+      <td>0.083834</td>
+      <td>0.043340</td>
+      <td>-0.081281</td>
+      <td>0.736772</td>
+      <td>-1.381776</td>
+      <td>5</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</details>
+</div>
+<p>Read alignment of homologs, identify nonidentical sites in Delta and BA.2 relative to BA.1, using WH1 as the numbering reference, and add to data frame with site-level data.</p>
+<div class="cell tag_hide-cell docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show content</span>
+<span class="expanded">Hide content</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Read in alignment</span>
+<span class="n">alignment_file</span> <span class="o">=</span> <span class="s1">&#39;data/clustalo-I20230702-193723-0021-19090519-p1m.clustal_num&#39;</span>
+<span class="n">align_dict</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">alignment_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">SeqIO</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">handle</span><span class="p">,</span> <span class="s2">&quot;clustal&quot;</span><span class="p">):</span>
+        <span class="n">align_dict</span><span class="p">[</span><span class="n">record</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">seq</span>
+        
+<span class="c1"># Identify non-identical sites realtive to BA.1</span>
+<span class="n">ref_seq</span> <span class="o">=</span> <span class="n">align_dict</span><span class="p">[</span><span class="s1">&#39;WH1_QHD43416.1&#39;</span><span class="p">]</span>
+<span class="n">homologs</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Delta&#39;</span><span class="p">,</span> <span class="s1">&#39;BA.2&#39;</span><span class="p">]</span>
+<span class="n">align_nis_dict</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">homolog</span> <span class="p">:</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">homolog</span> <span class="ow">in</span> <span class="n">homologs</span>
+<span class="p">}</span>
+<span class="n">align_gaps_dict</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">homolog</span> <span class="p">:</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">homolog</span> <span class="ow">in</span> <span class="n">homologs</span>
+<span class="p">}</span>
+<span class="k">for</span> <span class="n">homolog</span> <span class="ow">in</span> <span class="n">homologs</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">homolog</span><span class="p">)</span>
+    <span class="n">ref_n</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">n_diffs</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="p">(</span><span class="n">ref</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">))</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">ref_seq</span><span class="p">,</span> <span class="n">align_dict</span><span class="p">[</span><span class="s1">&#39;BA.1&#39;</span><span class="p">],</span> <span class="n">align_dict</span><span class="p">[</span><span class="n">homolog</span><span class="p">])):</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">j</span><span class="p">:</span>
+            
+            <span class="c1"># If the mut is an indel, then record it in the gap dict</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">==</span> <span class="s1">&#39;-&#39;</span> <span class="ow">or</span> <span class="n">j</span> <span class="o">==</span> <span class="s1">&#39;-&#39;</span><span class="p">):</span>
+                <span class="k">if</span> <span class="kc">True</span><span class="p">:</span> <span class="c1"># ref_n not in align_gaps_dict[homolog]:</span>
+                    <span class="n">align_gaps_dict</span><span class="p">[</span><span class="n">homolog</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ref_n</span><span class="p">)</span>
+                <span class="k">pass</span> <span class="c1"># continue</span>
+            
+            <span class="c1"># Record the mut in the nis dict</span>
+            <span class="c1">#print(ref_n, i, j)</span>
+            <span class="n">align_nis_dict</span><span class="p">[</span><span class="n">homolog</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ref_n</span><span class="p">)</span>
+            <span class="n">n_diffs</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">ref</span> <span class="o">!=</span> <span class="s1">&#39;-&#39;</span><span class="p">:</span>
+            <span class="n">ref_n</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;n_diffs&#39;</span><span class="p">,</span> <span class="n">n_diffs</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="nb">round</span><span class="p">(</span><span class="n">n_diffs</span><span class="o">/</span><span class="mi">1254</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+    
+<span class="c1"># Add columns to shifts_by_site that indicate if a site is nonidentical</span>
+<span class="k">for</span> <span class="n">homolog</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;Delta&#39;</span><span class="p">,</span> <span class="s1">&#39;BA.2&#39;</span><span class="p">]:</span>
+    <span class="n">hn</span> <span class="o">=</span> <span class="n">homolog</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">shifts_by_site</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;is_</span><span class="si">{</span><span class="n">hn</span><span class="si">}</span><span class="s2">_nis&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">shifts_by_site</span><span class="p">[</span><span class="s1">&#39;res_n&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">align_nis_dict</span><span class="p">[</span><span class="n">homolog</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Delta
+n_diffs 43 0.9657
+BA.2
+n_diffs 27 0.9785
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<p>Define function for getting distance matrix from structure.</p>
+<div class="cell tag_hide-cell docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show content</span>
+<span class="expanded">Hide content</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_distance_matrix</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">d_metric</span><span class="o">=</span><span class="s1">&#39;interatomic&#39;</span><span class="p">):</span>
+
+    <span class="c1"># Get a list of residues, ignorning heteroatoms</span>
+    <span class="n">residues</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">structure</span><span class="o">.</span><span class="n">get_residues</span><span class="p">()</span> <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">get_id</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot; &quot;</span><span class="p">]</span>
+    <span class="n">res_ns</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">res_ids</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">residues</span><span class="p">:</span>
+        <span class="n">full_id</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">get_full_id</span><span class="p">()</span>
+        <span class="n">chain</span> <span class="o">=</span> <span class="n">full_id</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">res_n</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">full_id</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">1</span><span class="p">:]))</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">res_n</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">res_ns</span><span class="p">)</span> <span class="ow">and</span> <span class="n">chain</span> <span class="o">==</span> <span class="s1">&#39;A&#39;</span><span class="p">:</span>
+            <span class="n">res_ns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">res_n</span><span class="p">)</span>
+        <span class="n">res_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">chain</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">res_n</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        
+    <span class="c1"># Compute a distance matrix between all pairs of C-alpha carbons</span>
+    <span class="n">dist_dict</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">key</span> <span class="p">:</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;res_n&#39;</span><span class="p">,</span> <span class="s1">&#39;res_id&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">res_ids</span>
+    <span class="p">}</span>
+    <span class="k">for</span> <span class="n">res_i</span> <span class="ow">in</span> <span class="n">residues</span><span class="p">:</span>
+        <span class="n">full_id_i</span> <span class="o">=</span> <span class="n">res_i</span><span class="o">.</span><span class="n">get_full_id</span><span class="p">()</span>
+        <span class="n">chain_i</span> <span class="o">=</span> <span class="n">full_id_i</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">res_n_i</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">full_id_i</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">1</span><span class="p">:]))</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="n">dist_dict</span><span class="p">[</span><span class="s1">&#39;res_n&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">res_n_i</span><span class="p">)</span>
+        <span class="n">dist_dict</span><span class="p">[</span><span class="s1">&#39;res_id&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">chain_i</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">res_n_i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        
+        <span class="c1">#print(res_n_i)</span>
+        
+        <span class="k">for</span> <span class="n">res_j</span> <span class="ow">in</span> <span class="n">residues</span><span class="p">:</span>
+            <span class="n">full_id_j</span> <span class="o">=</span> <span class="n">res_j</span><span class="o">.</span><span class="n">get_full_id</span><span class="p">()</span>
+            <span class="n">chain_j</span> <span class="o">=</span> <span class="n">full_id_j</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+            <span class="n">res_n_j</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">full_id_j</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">1</span><span class="p">:]))</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            
+            <span class="k">if</span> <span class="n">d_metric</span> <span class="o">==</span> <span class="s1">&#39;CA&#39;</span><span class="p">:</span>
+                <span class="n">xyz_i</span> <span class="o">=</span> <span class="n">res_i</span><span class="p">[</span><span class="s2">&quot;CA&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get_coord</span><span class="p">()</span>
+                <span class="n">xyz_j</span> <span class="o">=</span> <span class="n">res_j</span><span class="p">[</span><span class="s2">&quot;CA&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get_coord</span><span class="p">()</span>
+                <span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">xyz_j</span><span class="o">-</span><span class="n">xyz_i</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">d_metric</span> <span class="o">==</span> <span class="s1">&#39;interatomic&#39;</span><span class="p">:</span>
+                <span class="n">interatomic_dists</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">atom_i</span> <span class="ow">in</span> <span class="n">res_i</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">atom_j</span> <span class="ow">in</span> <span class="n">res_j</span><span class="p">:</span>
+                        <span class="n">interatomic_dists</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">atom_i</span><span class="o">-</span><span class="n">atom_j</span><span class="p">)</span>
+                <span class="n">d</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">interatomic_dists</span><span class="p">)</span>
+            
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">d_metric</span><span class="si">}</span><span class="s1"> not recognized&#39;</span><span class="p">)</span>
+            
+            <span class="n">dist_dict</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">chain_j</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">res_n_j</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+    <span class="n">dist_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">dist_dict</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">dist_df</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<p>For each input PDB, compute a distance matrix that quantifies the minimum inter-atomic distance between all atom pairs from a given pair of residues. Since this takes a long time, save the results to a file and only rerun if the file doesn’t exist.</p>
+<div class="cell tag_hide-cell docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show content</span>
+<span class="expanded">Hide content</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Make a list of PDBs to analyze, one per spike conformation</span>
+<span class="n">pdbs</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;7tf8&#39;</span><span class="p">,</span> <span class="s1">&#39;7tl9&#39;</span><span class="p">,</span> <span class="s1">&#39;7tge&#39;</span><span class="p">]</span>
+
+<span class="c1"># Loop over PDBs and compute distance matrices for each</span>
+<span class="n">dfs</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">pdb</span> <span class="ow">in</span> <span class="n">pdbs</span><span class="p">:</span>
+
+    <span class="c1"># Download structure</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">pdb</span><span class="p">)</span>
+    <span class="n">pdbl</span> <span class="o">=</span> <span class="n">PDBList</span><span class="p">()</span>
+    <span class="n">pdbl</span><span class="o">.</span><span class="n">retrieve_pdb_file</span><span class="p">(</span><span class="n">pdb</span><span class="p">,</span> <span class="n">pdir</span><span class="o">=</span><span class="s1">&#39;results/&#39;</span><span class="p">,</span> <span class="n">file_format</span><span class="o">=</span><span class="s1">&#39;pdb&#39;</span><span class="p">)</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;results/pdb</span><span class="si">{</span><span class="n">pdb</span><span class="si">}</span><span class="s1">.ent&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;results/pdb</span><span class="si">{</span><span class="n">pdb</span><span class="si">}</span><span class="s1">.pdb&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Read in structure</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">PDBParser</span><span class="p">()</span>
+    <span class="n">structure</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">get_structure</span><span class="p">(</span><span class="n">pdb</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;results/pdb</span><span class="si">{</span><span class="n">pdb</span><span class="si">}</span><span class="s1">.ent&#39;</span><span class="p">)</span>
+    
+    <span class="c1"># Compute distance matrix and write to output file</span>
+    <span class="n">output_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">OUTDIR</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">pdb</span><span class="si">}</span><span class="s1">_dist_matrix.csv&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">output_file</span><span class="p">):</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">get_distance_matrix</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">d_metric</span><span class="o">=</span><span class="s1">&#39;interatomic&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Writing distance matrix for </span><span class="si">{</span><span class="n">pdb</span><span class="si">}</span><span class="s1"> to </span><span class="si">{</span><span class="n">output_file</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>7tf8
+Structure exists: &#39;results/pdb7tf8.ent&#39; 
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/jared/miniconda3/envs/spike-analysis/lib/python3.11/site-packages/Bio/PDB/StructureBuilder.py:89: PDBConstructionWarning: WARNING: Chain A is discontinuous at line 26735.
+  warnings.warn(
+/home/jared/miniconda3/envs/spike-analysis/lib/python3.11/site-packages/Bio/PDB/StructureBuilder.py:89: PDBConstructionWarning: WARNING: Chain B is discontinuous at line 26861.
+  warnings.warn(
+/home/jared/miniconda3/envs/spike-analysis/lib/python3.11/site-packages/Bio/PDB/StructureBuilder.py:89: PDBConstructionWarning: WARNING: Chain C is discontinuous at line 26945.
+  warnings.warn(
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Writing distance matrix for 7tf8 to results/multidms02/7tf8_dist_matrix.csv
+7tl9
+Downloading PDB structure &#39;7tl9&#39;...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/jared/miniconda3/envs/spike-analysis/lib/python3.11/site-packages/Bio/PDB/StructureBuilder.py:89: PDBConstructionWarning: WARNING: Chain A is discontinuous at line 26146.
+  warnings.warn(
+/home/jared/miniconda3/envs/spike-analysis/lib/python3.11/site-packages/Bio/PDB/StructureBuilder.py:89: PDBConstructionWarning: WARNING: Chain B is discontinuous at line 26272.
+  warnings.warn(
+/home/jared/miniconda3/envs/spike-analysis/lib/python3.11/site-packages/Bio/PDB/StructureBuilder.py:89: PDBConstructionWarning: WARNING: Chain C is discontinuous at line 26328.
+  warnings.warn(
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Writing distance matrix for 7tl9 to results/multidms02/7tl9_dist_matrix.csv
+7tge
+Downloading PDB structure &#39;7tge&#39;...
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/jared/miniconda3/envs/spike-analysis/lib/python3.11/site-packages/Bio/PDB/StructureBuilder.py:89: PDBConstructionWarning: WARNING: Chain A is discontinuous at line 22717.
+  warnings.warn(
+/home/jared/miniconda3/envs/spike-analysis/lib/python3.11/site-packages/Bio/PDB/StructureBuilder.py:89: PDBConstructionWarning: WARNING: Chain B is discontinuous at line 22801.
+  warnings.warn(
+/home/jared/miniconda3/envs/spike-analysis/lib/python3.11/site-packages/Bio/PDB/StructureBuilder.py:89: PDBConstructionWarning: WARNING: Chain C is discontinuous at line 22913.
+  warnings.warn(
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Writing distance matrix for 7tge to results/multidms02/7tge_dist_matrix.csv
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<p>Read in the distance matrices generated above. Then make an NxN matrix with the minimum distance between each pair of residues, considering all instances of a residue in a given trimer, and across all conformations being analyzed. Finally, Compute summary statistics quantifying the level of shifts in a neighborhood around a residue and compute the nearest distance to a non-identical site.</p>
+<div class="cell tag_hide-cell docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show content</span>
+<span class="expanded">Hide content</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Read in data</span>
+<span class="n">dfs</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">pdb</span> <span class="ow">in</span> <span class="n">pdbs</span><span class="p">:</span>
+    <span class="n">output_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">OUTDIR</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">pdb</span><span class="si">}</span><span class="s1">_dist_matrix.csv&#39;</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">output_file</span><span class="p">)</span>
+    <span class="n">dfs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="n">dist_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">dfs</span><span class="p">)</span>
+
+<span class="c1"># Ignore subset of sites</span>
+<span class="n">dist_df</span> <span class="o">=</span> <span class="n">dist_df</span><span class="p">[</span>
+    <span class="o">~</span><span class="n">dist_df</span><span class="p">[</span><span class="s1">&#39;res_n&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">&#39;214A&#39;</span><span class="p">,</span> <span class="s1">&#39;214B&#39;</span><span class="p">,</span> <span class="s1">&#39;214C&#39;</span><span class="p">])</span>
+<span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">dist_df</span><span class="p">[</span><span class="s1">&#39;res_n&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dist_df</span><span class="p">[</span><span class="s1">&#39;res_n&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+<span class="c1"># First, collapse rows by site (ignoring chain),</span>
+<span class="c1"># taking the min value across common entries</span>
+<span class="n">min_dist_df</span> <span class="o">=</span> <span class="n">dist_df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;res_n&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+<span class="n">min_dist_df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="k">del</span> <span class="n">min_dist_df</span><span class="p">[</span><span class="s1">&#39;res_id&#39;</span><span class="p">]</span>
+
+<span class="c1"># Then, transpose the dataframe and do that same</span>
+<span class="c1"># as above, ignoring the same subset as above</span>
+<span class="n">min_dist_df</span> <span class="o">=</span> <span class="n">min_dist_df</span><span class="o">.</span><span class="n">T</span>
+<span class="n">min_dist_df</span><span class="p">[</span><span class="s1">&#39;res_n&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">min_dist_df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+    <span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="n">row</span><span class="o">.</span><span class="n">name</span><span class="p">[</span><span class="mi">2</span><span class="p">:],</span>
+    <span class="n">axis</span><span class="o">=</span><span class="mi">1</span>
+<span class="p">)</span>
+<span class="n">min_dist_df</span> <span class="o">=</span> <span class="n">min_dist_df</span><span class="p">[</span>
+    <span class="o">~</span><span class="n">min_dist_df</span><span class="p">[</span><span class="s1">&#39;res_n&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s1">&#39;214A&#39;</span><span class="p">,</span> <span class="s1">&#39;214B&#39;</span><span class="p">,</span> <span class="s1">&#39;214C&#39;</span><span class="p">])</span>
+<span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">min_dist_df</span><span class="p">[</span><span class="s1">&#39;res_n&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">min_dist_df</span><span class="p">[</span><span class="s1">&#39;res_n&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+<span class="n">min_dist_df</span> <span class="o">=</span> <span class="n">min_dist_df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;res_n&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">min_dist_df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">values</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">min_dist_df</span><span class="o">.</span><span class="n">index</span><span class="p">))</span>
+<span class="n">res_ns</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">min_dist_df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
+<span class="c1"># Merge per-site data with distance matrix</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">shifts_by_site</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
+    <span class="n">min_dist_df</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;res_n&#39;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;inner&#39;</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">shifts_by_site</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">min_dist_df</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+
+<span class="c1"># For each site, compute the average metric among</span>
+<span class="c1"># all neighbors</span>
+<span class="n">metric_prefix</span> <span class="o">=</span><span class="s2">&quot;max_abs_S&quot;</span>
+<span class="n">nbr_dist_cutoff</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Using a neighbor distance cutoff of </span><span class="si">{</span><span class="n">nbr_dist_cutoff</span><span class="si">}</span><span class="s1"> Angstroms&#39;</span><span class="p">)</span>
+<span class="n">metrics</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">metric_prefix</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">h</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;Delta&#39;</span><span class="p">,</span> <span class="s1">&#39;BA2&#39;</span><span class="p">]]</span>
+<span class="n">nbr_score_dict</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="n">key</span> <span class="p">:</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;res_n&#39;</span><span class="p">,</span> <span class="s1">&#39;n_nbrs&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="sa">f</span><span class="s1">&#39;nbr_</span><span class="si">{</span><span class="n">metric</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">metric</span> <span class="ow">in</span> <span class="n">metrics</span><span class="p">]</span>
+<span class="p">}</span>
+<span class="k">for</span> <span class="n">res_n</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">res_ns</span><span class="p">)):</span>
+    <span class="n">nbr_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span>
+        <span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">res_n</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">nbr_dist_cutoff</span><span class="p">)</span> <span class="o">&amp;</span>
+        <span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;res_n&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">res_n</span><span class="p">)</span>
+    <span class="p">]</span>
+    <span class="n">nbr_score_dict</span><span class="p">[</span><span class="s1">&#39;res_n&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">res_n</span><span class="p">)</span>
+    <span class="n">nbr_score_dict</span><span class="p">[</span><span class="s1">&#39;n_nbrs&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">nbr_data</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">metric</span> <span class="ow">in</span> <span class="n">metrics</span><span class="p">:</span>
+        <span class="n">nbr_score_dict</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;nbr_</span><span class="si">{</span><span class="n">metric</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nbr_data</span><span class="p">[</span><span class="n">metric</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+
+<span class="n">nbr_score_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">nbr_score_dict</span><span class="p">)</span>
+<span class="n">nbr_score_df</span> <span class="o">=</span> <span class="n">nbr_score_df</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;res_n&#39;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">homolog</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;BA2&#39;</span><span class="p">,</span> <span class="s1">&#39;Delta&#39;</span><span class="p">]:</span>
+    
+    <span class="c1"># Get a list of non-identical sites</span>
+    <span class="n">nis</span> <span class="o">=</span> <span class="n">nbr_score_df</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;is_</span><span class="si">{</span><span class="n">homolog</span><span class="si">}</span><span class="s2">_nis == True&quot;</span><span class="p">)[</span><span class="s2">&quot;res_n&quot;</span><span class="p">]</span>
+    
+    <span class="c1"># Add a column that gives the minimum distance to non-identical</span>
+    <span class="c1"># sites for a given homolog, not counting the query site, which</span>
+    <span class="c1"># we achieve by ignoring entries of 0 in the distance matrix</span>
+    <span class="n">nbr_score_df</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;dist_nearest_</span><span class="si">{</span><span class="n">homolog</span><span class="si">}</span><span class="s2">_nis&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nbr_score_df</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)[</span><span class="n">nis</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/tmp/ipykernel_173366/3939008951.py:5: DtypeWarning: Columns (0) have mixed types. Specify dtype option on import or set low_memory=False.
+  df = pd.read_csv(output_file)
+/tmp/ipykernel_173366/3939008951.py:5: DtypeWarning: Columns (0) have mixed types. Specify dtype option on import or set low_memory=False.
+  df = pd.read_csv(output_file)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1050 1050
+1224 1050 1033
+Using a neighbor distance cutoff of 5 Angstroms
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<p>Make plots analyzing the distribution shifts on the structure</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show source</span>
+<span class="expanded">Hide source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">saveas</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;structural_statistics_</span><span class="si">{</span><span class="n">metric_prefix</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">])</span>
+<span class="n">axs</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">subplot_mosaic</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    bbbBBB</span>
+<span class="sd">    cccCCC</span>
+<span class="sd">    &quot;&quot;&quot;</span><span class="p">,</span>
+    <span class="n">gridspec_kw</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;hspace&quot;</span><span class="p">:</span> <span class="mf">0.75</span><span class="p">,</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+
+<span class="k">for</span> <span class="n">homolog</span><span class="p">,</span> <span class="n">iter_ax</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="s2">&quot;Delta&quot;</span><span class="p">,</span> <span class="s2">&quot;BA2&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">]):</span>
+
+    <span class="n">sns</span><span class="o">.</span><span class="n">regplot</span><span class="p">(</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">nbr_score_df</span><span class="p">,</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">metric_prefix</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">homolog</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;nbr_</span><span class="si">{</span><span class="n">metric_prefix</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">homolog</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="n">iter_ax</span><span class="p">],</span>
+        <span class="n">scatter_kws</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;color&quot;</span><span class="p">:</span><span class="s1">&#39;royalblue&#39;</span> <span class="k">if</span> <span class="n">homolog</span> <span class="o">==</span> <span class="s2">&quot;Delta&quot;</span> <span class="k">else</span> <span class="s2">&quot;magenta&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;s&quot;</span><span class="p">:</span><span class="mi">35</span><span class="p">,</span>
+            <span class="s2">&quot;alpha&quot;</span><span class="p">:</span><span class="mf">0.2</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="n">line_kws</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;0.25&quot;</span><span class="p">}</span>
+    <span class="p">)</span>
+
+    <span class="n">corr</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">pearsonr</span><span class="p">(</span>
+        <span class="n">nbr_score_df</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;nbr_</span><span class="si">{</span><span class="n">metric_prefix</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">homolog</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">],</span> 
+        <span class="n">nbr_score_df</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">metric_prefix</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">homolog</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;p=</span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">p</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">else</span> <span class="s2">&quot;p&lt;0.001&quot;</span>
+    <span class="n">axs</span><span class="p">[</span><span class="n">iter_ax</span><span class="p">]</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;$r = </span><span class="si">{</span><span class="n">corr</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">$</span><span class="se">\n</span><span class="s2">$</span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s2">$&quot;</span><span class="p">,</span> 
+        <span class="p">(</span><span class="mf">0.55</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">),</span> 
+        <span class="n">xycoords</span><span class="o">=</span><span class="s2">&quot;axes fraction&quot;</span><span class="p">,</span> 
+        <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span>
+    <span class="p">)</span>
+    
+    <span class="n">axs</span><span class="p">[</span><span class="n">iter_ax</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">])</span>
+    <span class="n">axs</span><span class="p">[</span><span class="n">iter_ax</span><span class="p">]</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">axs</span><span class="p">[</span><span class="n">iter_ax</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">1.52</span><span class="p">])</span>
+    <span class="n">axs</span><span class="p">[</span><span class="n">iter_ax</span><span class="p">]</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">],</span> <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">])</span>
+    <span class="n">axs</span><span class="p">[</span><span class="n">iter_ax</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">homolog</span><span class="o">+</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">homolog</span> <span class="o">==</span> <span class="s2">&quot;Delta&quot;</span> <span class="k">else</span> <span class="s2">&quot;BA.2</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">homolog</span> <span class="o">==</span> <span class="s2">&quot;Delta&quot;</span><span class="p">:</span>
+        <span class="n">xlabel</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">metric_prefix</span><span class="si">}</span><span class="s1"> </span><span class="se">\n</span><span class="s1">averaged across neighboring sites&#39;</span>
+        <span class="n">xlabel</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;max. abs. shift </span><span class="se">\n</span><span class="s1">averaged across neighboring sites&#39;</span>
+        <span class="n">axs</span><span class="p">[</span><span class="n">iter_ax</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">xlabel</span><span class="p">)</span>
+        <span class="n">axs</span><span class="p">[</span><span class="n">iter_ax</span><span class="p">]</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_label_coords</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.22</span><span class="p">)</span>
+        <span class="n">axs</span><span class="p">[</span><span class="n">iter_ax</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;max. abs. shift&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">axs</span><span class="p">[</span><span class="n">iter_ax</span><span class="p">]</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">([])</span>
+        <span class="n">axs</span><span class="p">[</span><span class="n">iter_ax</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+        <span class="n">axs</span><span class="p">[</span><span class="n">iter_ax</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+        
+    <span class="n">sns</span><span class="o">.</span><span class="n">despine</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="n">iter_ax</span><span class="p">])</span>
+    <span class="n">axs</span><span class="p">[</span><span class="n">iter_ax</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">homolog</span><span class="p">,</span> <span class="n">iter_ax</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="s2">&quot;Delta&quot;</span><span class="p">,</span> <span class="s2">&quot;BA2&quot;</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;c&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">]):</span>
+    
+    <span class="n">data</span> <span class="o">=</span> <span class="n">nbr_score_df</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;dist_nearest_</span><span class="si">{</span><span class="n">homolog</span><span class="si">}</span><span class="s2">_nis != 0&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">data</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;dist_nearest_</span><span class="si">{</span><span class="n">homolog</span><span class="si">}</span><span class="s2">_nis&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">upper</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">sns</span><span class="o">.</span><span class="n">regplot</span><span class="p">(</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">,</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">metric_prefix</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">homolog</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;dist_nearest_</span><span class="si">{</span><span class="n">homolog</span><span class="si">}</span><span class="s2">_nis&quot;</span><span class="p">,</span>
+        <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="n">iter_ax</span><span class="p">],</span>
+        <span class="n">scatter_kws</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;color&quot;</span><span class="p">:</span><span class="s1">&#39;royalblue&#39;</span> <span class="k">if</span> <span class="n">homolog</span> <span class="o">==</span> <span class="s2">&quot;Delta&quot;</span> <span class="k">else</span> <span class="s2">&quot;magenta&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;s&quot;</span><span class="p">:</span><span class="mi">35</span><span class="p">,</span>
+            <span class="s2">&quot;alpha&quot;</span><span class="p">:</span><span class="mf">0.2</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="n">line_kws</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;0.25&quot;</span><span class="p">}</span>
+    <span class="p">)</span>
+    <span class="n">corr</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">pearsonr</span><span class="p">(</span>
+        <span class="n">nbr_score_df</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;dist_nearest_</span><span class="si">{</span><span class="n">homolog</span><span class="si">}</span><span class="s2">_nis != 0&quot;</span><span class="p">)[</span><span class="sa">f</span><span class="s2">&quot;dist_nearest_</span><span class="si">{</span><span class="n">homolog</span><span class="si">}</span><span class="s2">_nis&quot;</span><span class="p">],</span> 
+        <span class="n">nbr_score_df</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;dist_nearest_</span><span class="si">{</span><span class="n">homolog</span><span class="si">}</span><span class="s2">_nis != 0&quot;</span><span class="p">)[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">metric_prefix</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">homolog</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;p=</span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">p</span> <span class="o">!=</span> <span class="mi">0</span> <span class="k">else</span> <span class="s2">&quot;p&lt;0.001&quot;</span>
+    <span class="n">axs</span><span class="p">[</span><span class="n">iter_ax</span><span class="p">]</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;$r=</span><span class="si">{</span><span class="n">corr</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">$</span><span class="se">\n</span><span class="s2">$</span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s2">$&quot;</span><span class="p">,</span> 
+        <span class="p">(</span><span class="mf">0.55</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">),</span>
+        <span class="n">xycoords</span><span class="o">=</span><span class="s2">&quot;axes fraction&quot;</span><span class="p">,</span> 
+        <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span>
+    <span class="p">)</span>
+
+    <span class="n">axs</span><span class="p">[</span><span class="n">iter_ax</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">])</span>
+    <span class="n">axs</span><span class="p">[</span><span class="n">iter_ax</span><span class="p">]</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
+    
+    <span class="n">axs</span><span class="p">[</span><span class="n">iter_ax</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">55</span><span class="p">])</span>
+    <span class="n">axs</span><span class="p">[</span><span class="n">iter_ax</span><span class="p">]</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">50</span><span class="p">],</span> <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">50</span><span class="p">])</span>
+    
+    
+    <span class="k">if</span> <span class="n">homolog</span> <span class="o">==</span> <span class="s2">&quot;Delta&quot;</span><span class="p">:</span>
+        <span class="n">xlabel</span> <span class="o">=</span> <span class="s1">&#39;distance to nearest non-identical site ($\AA$)&#39;</span>
+        <span class="n">axs</span><span class="p">[</span><span class="n">iter_ax</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="n">xlabel</span><span class="p">)</span>
+        <span class="n">axs</span><span class="p">[</span><span class="n">iter_ax</span><span class="p">]</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_label_coords</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.18</span><span class="p">)</span>
+        <span class="n">axs</span><span class="p">[</span><span class="n">iter_ax</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">metric_prefix</span><span class="p">)</span>
+        <span class="n">axs</span><span class="p">[</span><span class="n">iter_ax</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;max. abs. shift&quot;</span><span class="p">)</span>
+        
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">axs</span><span class="p">[</span><span class="n">iter_ax</span><span class="p">]</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">([])</span>
+        <span class="n">axs</span><span class="p">[</span><span class="n">iter_ax</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+        <span class="n">axs</span><span class="p">[</span><span class="n">iter_ax</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+        
+    <span class="n">sns</span><span class="o">.</span><span class="n">despine</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="n">iter_ax</span><span class="p">])</span>
+    <span class="n">axs</span><span class="p">[</span><span class="n">iter_ax</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+
+    
+<span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">OUTDIR</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">saveas</span><span class="si">}</span><span class="s2">.pdf&quot;</span><span class="p">,</span><span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">OUTDIR</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">saveas</span><span class="si">}</span><span class="s2">.png&quot;</span><span class="p">,</span><span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="_images/eda511388067bfc7e12cb30b6362b3ace028b487368264d541c39eaede7dd425.png" src="_images/eda511388067bfc7e12cb30b6362b3ace028b487368264d541c39eaede7dd425.png" />
+</div>
+</div>
+</section>
 </section>
 
 
@@ -7193,6 +8068,7 @@ training_step 15/30,Loss: 0.7169945389079592, Time: 17 Seconds
 <li class="toctree-l2"><a class="reference internal" href="#model-reference-choice-comparison">Model reference choice comparison</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#cumulative-distribution-of-model-sparsity">Cumulative distribution of model sparsity</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#correlation-of-ba2-and-delta-shifts">Correlation of BA2 and Delta Shifts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#structural-analysis">Structural Analysis</a></li>
 </ul>
 </li>
 </ul>
