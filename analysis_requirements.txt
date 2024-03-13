@@ -1,4 +1,4 @@
-multidms==0.2.0
+multidms==0.4.0
 biopython
 notebook
 ipywidgets
