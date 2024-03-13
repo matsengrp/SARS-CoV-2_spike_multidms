@@ -1,3 +1,8 @@
+
+convergence_testing_2024-03-13/
+results/spike_analysis/*.png
+results/spike_analysis/7t*.csv
+results/spike_analysis/*pdb*
 **/Attic
 **/.ipynb_checkpoints
 **/hssp-3.1.5
