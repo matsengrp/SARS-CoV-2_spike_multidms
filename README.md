@@ -29,6 +29,6 @@ jupyter notebook
 ```
 
 ## Key files
-1. [results/spike_analysis/mutations_df.csv](results/mutations_df.csv) contains the respective parameters and phenotype effects for all mutations analyzed in this study.
-2. [results/spike_analysis/training_functional_scores.csv](results/training_functional_scores.csv) contains the curated model training set of barcoded variants and their respective functional scores, for each of the two replicate.
+1. [results/spike_analysis/mutations_df.csv](results/spike_analysis/mutations_df.csv) contains the respective parameters and phenotype effects for all mutations analyzed in this study.
+2. [results/spike_analysis/training_functional_scores.csv](results/spike_analysis/training_functional_scores.csv) contains the curated model training set of barcoded variants and their respective functional scores, for each of the two replicate.
 
