@@ -1,26 +1,23 @@
-
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Overview &#8212; Joint Modeling of SARS-CoV-2 Spike homologs 2023-07-21 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
-    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d1102ebc" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=98334b14" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/documentation_options.js?v=04cdc583"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="_static/togglebutton.js"></script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -28,8 +25,9 @@
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
+
   
-  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+  
 
   </head><body>
   
@@ -42,7 +40,7 @@
           <div class="body" role="main">
             
   <section id="overview">
-<h1>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">¶</a></h1>
+<h1>Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h1>
 <p>This page contains a single notebook with all code used
 to produce the analysis in our manuscript:
 <em>Jointly modeling deep mutational scans identifies shifted mutational effects among SARS-CoV-2 spike homologs</em>.
@@ -62,12 +60,15 @@ analysis yourself, can be found at
 <li class="toctree-l2"><a class="reference internal" href="spike-analysis.html#variant-barcode-and-mutation-background-stats">Variant barcode and mutation background stats</a></li>
 <li class="toctree-l2"><a class="reference internal" href="spike-analysis.html#encode-data-for-fitting">Encode data for fitting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="spike-analysis.html#fit-models-shrinkage-analysis">Fit Models (Shrinkage Analysis)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spike-analysis.html#model-evaluation-and-selection">Model Evaluation and Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spike-analysis.html#cross-validation">Cross Validation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="spike-analysis.html#global-epistasis-fits">Global epistasis fits</a></li>
 <li class="toctree-l2"><a class="reference internal" href="spike-analysis.html#shifted-mutations-interactive-altair-chart">Shifted mutations (interactive altair chart)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="spike-analysis.html#shifted-mutations-manually-queried">Shifted mutations (manually queried)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="spike-analysis.html#comparison-of-results-to-the-naive-approach-independent-condition-fits">Comparison of results to the naive approach (independent-condition fits)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spike-analysis.html#comparison-to-linear-model">Comparison to linear model</a></li>
 <li class="toctree-l2"><a class="reference internal" href="spike-analysis.html#validation-mutations">Validation mutations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="spike-analysis.html#model-reference-choice-comparison">Model reference choice comparison</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spike-analysis.html#model-reference-choice-comparison">Model-reference choice comparison</a></li>
 <li class="toctree-l2"><a class="reference internal" href="spike-analysis.html#cumulative-distribution-of-model-sparsity">Cumulative distribution of model sparsity</a></li>
 <li class="toctree-l2"><a class="reference internal" href="spike-analysis.html#correlation-of-ba2-and-delta-shifts">Correlation of BA2 and Delta Shifts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="spike-analysis.html#structural-analysis">Structural Analysis</a></li>
@@ -132,11 +133,11 @@ analysis yourself, can be found at
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2023, Jared Galloway.
+      &#169;2023, Jared Galloway.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.2.6</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
       
       |
       <a href="_sources/index.rst.txt"
