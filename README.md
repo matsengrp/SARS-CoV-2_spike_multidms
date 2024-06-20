@@ -9,6 +9,8 @@ to explore the analysis interactively.
 This repository contains the code in the form of a jupyter notebook,
 as well as the source code for generating the page.
 
+## Run the analysis interactively
+
 To run the notebook:
 1. clone the repository 
 ```
@@ -27,6 +29,11 @@ pip install -r analysis_requirements.txt
 ```
 jupyter notebook
 ```
+
+## Run the analysis via Docker and papermill
+
+Each of []() and []()
+
 
 ## Key files
 1. [results/spike_analysis/mutations_df.csv](results/spike_analysis/mutations_df.csv) contains the respective parameters and phenotype effects for all mutations analyzed in this study.

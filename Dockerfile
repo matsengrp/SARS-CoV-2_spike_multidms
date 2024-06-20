@@ -5,7 +5,7 @@ FROM quay.io/hdc-workflows/ubuntu:20.04
 
 LABEL maintainer "Jared Galloway <jgallowa@fredhutch.rg>" \
       version "0.1.9" \
-      description "multidms"
+      description "multidms-analysis"
 
 # install needed tools
 RUN apt-get update --fix-missing -qq && \
@@ -25,5 +25,5 @@ ENV VIRTUAL_ENV=/opt/venv
 RUN python3 -m venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
-# install multidms
-RUN pip install multidms==0.1.9
+# install python dependencies
+RUN pip install 

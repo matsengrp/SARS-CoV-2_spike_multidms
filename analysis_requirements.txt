@@ -1,6 +1,7 @@
 multidms==0.4.0
 biopython
 notebook
+papermill
 ipywidgets
 scipy
 numpy
