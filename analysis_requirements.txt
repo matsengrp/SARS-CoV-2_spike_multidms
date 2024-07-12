@@ -1,4 +1,5 @@
-multidms==0.4.0
+multidms==1.0.0
+dms_variants
 biopython
 notebook
 papermill
