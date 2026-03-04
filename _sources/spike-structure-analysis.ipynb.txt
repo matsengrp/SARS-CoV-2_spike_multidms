@@ -10,6 +10,16 @@
   },
   {
    "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "> **Note:** This notebook has not yet been updated for the latest multidms API (v1.3+).\n",
+    "> The most recent working version of this structural analysis code can be found in the\n",
+    "> `spike-analysis.ipynb` notebook at commit\n",
+    "> [`f3137d7`](https://github.com/matsengrp/SARS-CoV-2_spike_multidms/commit/f3137d7baa3faf336d88e8c03645927fb13c30ed).\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
    "id": "388dd8da",
    "metadata": {},
    "source": [
@@ -890,7 +900,7 @@
        "    </tr>\n",
        "  </tbody>\n",
        "</table>\n",
-       "<p>5 rows × 1050 columns</p>\n",
+       "<p>5 rows \u00d7 1050 columns</p>\n",
        "</div>"
       ],
       "text/plain": [
