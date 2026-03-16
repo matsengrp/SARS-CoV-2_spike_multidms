@@ -3,7 +3,7 @@ name = "sars-cov2-spike-multidms"
 version = "0.1.0"
 description = "Joint modeling of SARS-CoV-2 spike homologs using multidms"
 channels = ["conda-forge", "bioconda"]
-platforms = ["osx-arm64"]
+platforms = ["osx-arm64", "linux-64"]
 
 [dependencies]
 python = ">=3.11,<3.13"
