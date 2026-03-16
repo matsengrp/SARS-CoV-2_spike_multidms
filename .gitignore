@@ -15,6 +15,9 @@ results/supplemental/
 # Python
 __pycache__/
 
+# Snakemake
+.snakemake/
+
 # Pixi
 .pixi/
 pixi.lock
