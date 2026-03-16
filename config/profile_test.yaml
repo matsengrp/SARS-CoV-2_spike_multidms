@@ -1,0 +1,28 @@
+# Scaled-down parameters for quick laptop testing.
+# Usage: pixi run test
+#   (or: snakemake --config profile=test ...)
+
+gpu_ids: null
+n_processes: 1
+
+simulation:
+  genelength: 10                              # PRODUCTION: 50
+  n_non_identical_sites: 3                    # PRODUCTION: 10
+  n_shifted_non_identical_sites: 2            # PRODUCTION: 6
+  n_shifted_identical_sites: 1                # PRODUCTION: 4
+  variants_per_lib_genelength_scalar: 100     # PRODUCTION: 1000
+  fitting:
+    maxiter: 10                               # PRODUCTION: 100
+    tol: 1.0e-3                               # PRODUCTION: 1.0e-6
+    fusionreg_values: [0.0, 2.0, 8.0]        # PRODUCTION: [0.0, 2.0, 4.0, 8.0]
+    ge_kwargs: {tol: 1.0e-5, maxiter: 100, maxls: 10, jit: true, verbose: false}
+    cal_kwargs: {tol: 1.0e-4, maxiter: 100, maxls: 10, jit: true, verbose: false}
+  lasso_choice: 2.0                           # PRODUCTION: 4.0
+
+spike:
+  subsample_frac: 0.01                        # PRODUCTION: null (no subsampling)
+  fitting:
+    maxiter: 2                                # PRODUCTION: 30
+    fusionreg_values: [4.0e-5]               # PRODUCTION: [0.0, 5.0e-6, ... 6.4e-4]
+    ge_kwargs: {tol: 1.0e-5, maxiter: 5, maxls: 5, jit: true, verbose: false}
+    cal_kwargs: {tol: 1.0e-4, maxiter: 5, maxls: 5, jit: true, verbose: false}

@@ -1,0 +1,95 @@
+# Production configuration for SARS-CoV-2 spike multidms analysis pipeline.
+# All tunable parameters extracted from the original monolithic notebooks
+# (spike-analysis.ipynb and simulation_validation.ipynb).
+
+pipelines: [simulation, spike]
+seed: 2
+train_frac: 0.8
+gpu_ids: [0, 1, 2, 3]
+n_processes: 1
+
+simulation:
+  genelength: 50
+  wt_latent: 5.0
+  stop_effect: -10
+  norm_weights: [[0.4, -0.33, 0.8], [0.6, -2.666, 2]]
+  n_non_identical_sites: 10
+  min_muteffect_in_bundle: -1.0
+  max_muteffect_in_bundle: 1.0
+  n_shifted_non_identical_sites: 6
+  n_shifted_identical_sites: 4
+  shift_gauss_variance: 0.666
+  sigmoid_phenotype_scale: 6
+  variants_per_lib_genelength_scalar: 1000
+  avgmuts: 2.0
+  bclen: 16
+  variant_error_rate: 0.0
+  avgdepth_per_variant: 200
+  lib_uniformity: 5
+  noise: 0.0
+  bottleneck_variants_per_lib_scalar:
+    tight_bottle: 5
+    loose_bottle: 100
+  output_dir: results/simulation
+  fitting:
+    maxiter: 100
+    tol: 1.0e-6
+    fusionreg_values: [0.0, 2.0, 4.0, 8.0]
+    l2reg: 1.0e-4
+    beta0_ridge: 1.0e-5
+    ge_type: "Sigmoid"
+    warmstart: false
+    beta0_init: {h1: 5.0, h2: 0.0}
+    alpha_init: {h1: 6.0, h2: 6.0}
+    beta_clip_range: [-10, 10]
+    loss_kwargs: {"δ": 1.0}
+    ge_kwargs: {tol: 1.0e-5, maxiter: 1000, maxls: 40, jit: true, verbose: false}
+    cal_kwargs: {tol: 1.0e-4, maxiter: 1000, maxls: 40, jit: true, verbose: false}
+  lasso_choice: 4.0
+
+spike:
+  output_dir: results/spike_analysis
+  subsample_frac: null
+  seed: 4
+  chosen_lasso_strength: 4.0e-5
+  times_seen_threshold: 1
+  reference: "Omicron_BA1"
+  experiment_conditions: ["Delta", "Omicron_BA1", "Omicron_BA2"]
+  replicate_1_experiments: ["Delta-2", "Omicron_BA1-2", "Omicron_BA2-1"]
+  replicate_2_experiments: ["Delta-4", "Omicron_BA1-3", "Omicron_BA2-2"]
+  func_score_clip: [-3.5, 2.5]
+  pre_count_threshold: 100
+  condition_colors:
+    Delta: "#F97306"
+    Omicron_BA1: "#BFBFBF"
+    Omicron_BA2: "#9400D3"
+  condition_titles:
+    Delta: "Delta"
+    Omicron_BA1: "BA.1"
+    Omicron_BA2: "BA.2"
+  fitting:
+    maxiter: 30
+    tol: 1.0e-6
+    fusionreg_values: [0.0, 5.0e-6, 1.0e-5, 2.0e-5, 4.0e-5, 8.0e-5, 1.6e-4, 3.2e-4, 6.4e-4]
+    l2reg: 1.0e-4
+    beta0_ridge: 0
+    ge_type: "Sigmoid"
+    warmstart: false
+    beta0_init: {Omicron_BA1: 5.0, Delta: 0.0, Omicron_BA2: 0.0}
+    alpha_init: {Omicron_BA1: 6.0, Delta: 6.0, Omicron_BA2: 6.0}
+    beta_clip_range: [-10, 10]
+    loss_kwargs: {"δ": 1.0}
+    ge_kwargs: {tol: 1.0e-5, maxiter: 1000, maxls: 40, jit: true, verbose: false}
+    cal_kwargs: {tol: 1.0e-4, maxiter: 1000, maxls: 40, jit: true, verbose: false}
+  domain_dict:
+    NTD: [13, 293]
+    RBD: [330, 528]
+    SD1: [528, 590]
+    SD2: [590, 685]
+    FP: [815, 834]
+    HR1: [907, 985]
+    CH: [985, 1035]
+    CD: [1075, 1162]
+    HR2: [1162, 1211]
+    TM: [1211, 1234]
+  validation_mutations: ["D142L", "A419S", "A570D", "K854N", "T1027I"]

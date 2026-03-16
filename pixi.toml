@@ -1,0 +1,37 @@
+[workspace]
+name = "sars-cov2-spike-multidms"
+version = "0.1.0"
+description = "Joint modeling of SARS-CoV-2 spike homologs using multidms"
+channels = ["conda-forge", "bioconda"]
+platforms = ["osx-arm64"]
+
+[dependencies]
+python = ">=3.11,<3.13"
+pip = "*"
+
+[pypi-dependencies]
+multidms = { path = "../multidms", editable = true }
+dms-variants = "*"
+biopython = "*"
+plotnine = "*"
+scipy = "*"
+numpy = "*"
+pandas = ">=2.2.0"
+jax = ">=0.4.29"
+jaxlib = ">=0.4.29"
+matplotlib = "*"
+seaborn = "*"
+altair = "==5.1.2"
+tqdm = "*"
+snakemake = ">=8.0"
+papermill = "*"
+nbconvert = "*"
+pyyaml = ">=6.0"
+notebook = "*"
+ipywidgets = "*"
+ipykernel = "*"
+
+[tasks]
+snakemake = "snakemake"
+test = "snakemake --configfile config/config.yaml --config profile=test -j4"
+production = "snakemake --configfile config/config.yaml -j8"
