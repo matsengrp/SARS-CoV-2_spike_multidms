@@ -4,7 +4,17 @@ results/spike_analysis/*.png
 results/spike_analysis/7t*.csv
 results/spike_analysis/*pdb*
 results/simulation_validation
+results/simulation/
+results/html/
+results/supplemental/
 **/archive
 **/.ipynb_checkpoints
 **/hssp-3.1.5
 **/*.pkl
+
+# Python
+__pycache__/
+
+# Pixi
+.pixi/
+pixi.lock

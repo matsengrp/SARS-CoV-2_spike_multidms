@@ -1,0 +1,84 @@
+"""Main Snakefile for SARS-CoV-2 spike multidms analysis pipeline."""
+
+import copy
+import yaml
+
+
+def deep_merge(base, override):
+    """Recursively merge override dict into base dict."""
+    result = copy.deepcopy(base)
+    for key, value in override.items():
+        if key in result and isinstance(result[key], dict) and isinstance(value, dict):
+            result[key] = deep_merge(result[key], value)
+        else:
+            result[key] = copy.deepcopy(value)
+    return result
+
+
+configfile: "config/config.yaml"
+
+
+# Load profile overrides if specified
+profile = config.get("profile", "")
+if profile:
+    with open(f"config/profile_{profile}.yaml") as f:
+        overrides = yaml.safe_load(f)
+        if overrides:
+            config = deep_merge(config, overrides)
+
+
+# Build papermill CLI args for notebooks
+def papermill_args(config_path="config/config.yaml"):
+    """Return papermill parameter args string."""
+    args = f"-p config_path {config_path}"
+    if profile:
+        args += f" -p profile {profile}"
+    return args
+
+
+PAPERMILL_ARGS = papermill_args()
+
+# Determine which pipelines to run
+PIPELINES = config.get("pipelines", ["simulation", "spike"])
+
+SIM_HTMLS = []
+SPIKE_HTMLS = []
+
+if "simulation" in PIPELINES:
+    SIM_HTMLS = [
+        "results/html/simulation/sim_01_data_simulation.html",
+        "results/html/simulation/sim_02_model_fitting.html",
+        "results/html/simulation/sim_03_evaluation.html",
+        "results/html/simulation/sim_04_visualization.html",
+        "results/html/supplemental/supplemental_sim_figures.html",
+    ]
+
+if "spike" in PIPELINES:
+    SPIKE_HTMLS = [
+        "results/html/spike/spike_01_data_loading.html",
+        "results/html/spike/spike_02_exploratory_stats.html",
+        "results/html/spike/spike_03_fit_models.html",
+        "results/html/spike/spike_04_model_evaluation.html",
+        "results/html/spike/spike_05_cross_validation.html",
+        "results/html/spike/spike_06_global_epistasis.html",
+        "results/html/spike/spike_07_shifted_mutations.html",
+        "results/html/spike/spike_08_naive_comparison.html",
+        "results/html/spike/spike_09_linear_comparison.html",
+        "results/html/spike/spike_10_validation.html",
+        "results/html/spike/spike_11_reference_sensitivity.html",
+        "results/html/spike/spike_12_sparsity_correlation.html",
+        "results/html/supplemental/supplemental_structure.html",
+    ]
+
+ALL_HTMLS = SIM_HTMLS + SPIKE_HTMLS
+
+
+include: "rules/simulation.smk"
+include: "rules/spike.smk"
+include: "rules/supplemental.smk"
+include: "rules/pages.smk"
+
+
+rule all:
+    input:
+        "results/html/index.html",
