@@ -73,12 +73,12 @@ if "spike" in PIPELINES:
 ALL_HTMLS = SIM_HTMLS + SPIKE_HTMLS
 
 
+rule all:
+    input:
+        "results/html/index.html",
+
+
 include: "rules/simulation.smk"
 include: "rules/spike.smk"
 include: "rules/supplemental.smk"
 include: "rules/pages.smk"
-
-
-rule all:
-    input:
-        "results/html/index.html",
