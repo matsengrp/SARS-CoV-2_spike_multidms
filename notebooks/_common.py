@@ -234,6 +234,59 @@ def reconstruct_simulators(sim_config, mut_effects_df, seed):
     return phenotype_fxn_dict_h1, phenotype_fxn_dict_h2
 
 
+def all_muts_known(substitutions, known_muts):
+    """Check if all mutations in a substitution string are in the known set.
+
+    Parameters
+    ----------
+    substitutions : str
+        Space-separated mutation strings (may be NaN or empty).
+    known_muts : set
+        Set of known mutation strings.
+
+    Returns
+    -------
+    bool
+    """
+    if pd.isna(substitutions) or substitutions.strip() == "":
+        return True
+    return all(m in known_muts for m in substitutions.split())
+
+
+def build_fit_params(fit_config, datasets):
+    """Build a standard fitting parameter dict from a config section.
+
+    Parameters
+    ----------
+    fit_config : dict
+        The ``fitting`` subsection of the pipeline config
+        (e.g., ``config["spike"]["fitting"]``).
+    datasets : list
+        List of ``multidms.Data`` objects to fit.
+
+    Returns
+    -------
+    dict
+        Ready to pass to ``multidms.model_collection.fit_models()``.
+    """
+    return {
+        "maxiter": [fit_config["maxiter"]],
+        "tol": [fit_config["tol"]],
+        "fusionreg": fit_config["fusionreg_values"],
+        "l2reg": [fit_config["l2reg"]],
+        "beta0_ridge": [fit_config["beta0_ridge"]],
+        "ge_type": [fit_config["ge_type"]],
+        "ge_kwargs": [fit_config["ge_kwargs"]],
+        "cal_kwargs": [fit_config["cal_kwargs"]],
+        "loss_kwargs": [fit_config["loss_kwargs"]],
+        "warmstart": [fit_config["warmstart"]],
+        "beta0_init": [fit_config["beta0_init"]],
+        "alpha_init": [fit_config["alpha_init"]],
+        "beta_clip_range": [tuple(fit_config["beta_clip_range"])],
+        "dataset": datasets,
+    }
+
+
 def combine_replicate_muts(
     fit_dict, predicted_func_scores=False, how="inner", **kwargs
 ):
