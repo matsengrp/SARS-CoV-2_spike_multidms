@@ -117,6 +117,123 @@ def build_phenotype_fxn_dict(
     return fxn_dict
 
 
+def reconstruct_simulators(sim_config, mut_effects_df, seed):
+    """Reconstruct phenotype simulators and function dicts from config and saved mutation effects.
+
+    Re-seeds the RNG and regenerates the same gene sequences and
+    SigmoidPhenotypeSimulators that ``sim_01_data_simulation`` created,
+    then rebuilds the phenotype function dicts for both homologs.
+
+    Parameters
+    ----------
+    sim_config : dict
+        The ``simulation`` section of the pipeline config.
+    mut_effects_df : pandas.DataFrame
+        The saved mutation effects CSV (``simulated_muteffects.csv``).
+    seed : int
+        Global random seed from the pipeline config.
+
+    Returns
+    -------
+    tuple of (dict, dict)
+        ``(phenotype_fxn_dict_h1, phenotype_fxn_dict_h2)`` where each dict
+        maps ``"latentPhenotype"``, ``"observedPhenotype"``, and
+        ``"observedEnrichment"`` to callable functions.
+    """
+    import random
+
+    import Bio.Seq
+    import dms_variants.simulate
+    import numpy as np
+    from dms_variants.constants import (
+        AAS_NOSTOP,
+        AAS_WITHSTOP,
+        CODONS_NOSTOP,
+    )
+
+    wt_latent = sim_config["wt_latent"]
+    sigmoid_phenotype_scale = sim_config["sigmoid_phenotype_scale"]
+
+    random.seed(seed)
+    np.random.seed(seed)
+
+    geneseq_h1 = "".join(random.choices(CODONS_NOSTOP, k=sim_config["genelength"]))
+    aaseq_h1 = str(Bio.Seq.Seq(geneseq_h1).translate())
+
+    mut_pheno_args = {
+        "geneseq": geneseq_h1,
+        "wt_latent": wt_latent,
+        "seed": seed,
+        "stop_effect": sim_config["stop_effect"],
+        "norm_weights": tuple(tuple(w) for w in sim_config["norm_weights"]),
+    }
+    SigmoidPhenotype_h1 = dms_variants.simulate.SigmoidPhenotypeSimulator(
+        **mut_pheno_args
+    )
+    SigmoidPhenotype_h2 = dms_variants.simulate.SigmoidPhenotypeSimulator(
+        **mut_pheno_args
+    )
+
+    for mutation in SigmoidPhenotype_h2.muteffects.keys():
+        SigmoidPhenotype_h2.muteffects[mutation] = mut_effects_df.loc[
+            mut_effects_df["mutation"] == mutation, "beta_h2"
+        ].values[0]
+
+    wt_latent_phenotype_shift = mut_effects_df.query("bundle_mut")["beta_h2"].sum()
+    SigmoidPhenotype_h2.wt_latent = (
+        SigmoidPhenotype_h1.wt_latent + wt_latent_phenotype_shift
+    )
+
+    non_identical_sites = sorted(
+        random.sample(
+            range(1, len(aaseq_h1) + 1), sim_config["n_non_identical_sites"]
+        )
+    )
+    aaseq_h2 = ""
+    for aa_n, aa in enumerate(aaseq_h1, 1):
+        if aa_n in non_identical_sites:
+            valid = [
+                m
+                for m in AAS_NOSTOP
+                if m != aa
+                and SigmoidPhenotype_h1.muteffects[f"{aa}{aa_n}{m}"]
+                > sim_config["min_muteffect_in_bundle"]
+                and SigmoidPhenotype_h1.muteffects[f"{aa}{aa_n}{m}"]
+                < sim_config["max_muteffect_in_bundle"]
+            ]
+            aaseq_h2 += random.choice(valid)
+        else:
+            aaseq_h2 += aa
+
+    for idx, row in mut_effects_df.query("bundle_mut").iterrows():
+        for aa_mut in AAS_WITHSTOP:
+            if aa_mut == row.mut_aa:
+                continue
+            non_ref_mutation = f"{row.mut_aa}{row.site}{aa_mut}"
+            if aa_mut == "*":
+                SigmoidPhenotype_h2.muteffects[non_ref_mutation] = sim_config[
+                    "stop_effect"
+                ]
+            elif aa_mut == row.wt_aa:
+                SigmoidPhenotype_h2.muteffects[non_ref_mutation] = -row.beta_h2
+            else:
+                ref_mut = f"{row.wt_aa}{row.site}{aa_mut}"
+                ref_mut_effect = mut_effects_df.loc[
+                    mut_effects_df["mutation"] == ref_mut, "beta_h2"
+                ].values[0]
+                SigmoidPhenotype_h2.muteffects[non_ref_mutation] = (
+                    -row.beta_h2 + ref_mut_effect
+                )
+
+    phenotype_fxn_dict_h1 = build_phenotype_fxn_dict(
+        SigmoidPhenotype_h1, sigmoid_phenotype_scale, wt_latent, is_reference=True
+    )
+    phenotype_fxn_dict_h2 = build_phenotype_fxn_dict(
+        SigmoidPhenotype_h2, sigmoid_phenotype_scale, wt_latent, is_reference=False
+    )
+    return phenotype_fxn_dict_h1, phenotype_fxn_dict_h2
+
+
 def combine_replicate_muts(
     fit_dict, predicted_func_scores=False, how="inner", **kwargs
 ):
