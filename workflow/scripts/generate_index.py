@@ -3,7 +3,13 @@
 
 import os
 
-HTML_DIR = "results/html"
+# When run via Snakemake script: directive, use snakemake.output;
+# otherwise fall back to default for standalone use.
+try:
+    _output_path = snakemake.output[0]  # noqa: F821
+    HTML_DIR = os.path.dirname(_output_path)
+except NameError:
+    HTML_DIR = "results/html"
 
 SECTIONS = {
     "Simulation Validation": {
@@ -130,9 +136,19 @@ def generate_html():
 """
 
 
-if __name__ == "__main__":
+def main():
     html = generate_html()
     os.makedirs(HTML_DIR, exist_ok=True)
-    with open(f"{HTML_DIR}/index.html", "w") as f:
+    output_file = os.path.join(HTML_DIR, "index.html")
+    with open(output_file, "w") as f:
         f.write(html)
-    print(f"Generated {HTML_DIR}/index.html")
+    print(f"Generated {output_file}")
+
+
+# Run when invoked via Snakemake script: directive or standalone
+try:
+    snakemake  # noqa: F821
+    main()
+except NameError:
+    if __name__ == "__main__":
+        main()

@@ -6,9 +6,7 @@ rule generate_index:
         ALL_HTMLS,
     output:
         "results/html/index.html",
-    params:
-        script="workflow/scripts/generate_index.py",
-    shell:
-        """
-        python {params.script}
-        """
+    log:
+        "logs/generate_index.log",
+    script:
+        "../scripts/generate_index.py"

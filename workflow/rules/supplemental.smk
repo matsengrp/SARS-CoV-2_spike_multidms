@@ -3,6 +3,7 @@
 
 rule supplemental_sim_figures:
     input:
+        config="config/config.yaml",
         muteffects="results/simulation/simulated_muteffects.csv",
         func_scores="results/simulation/simulated_func_scores.csv",
         model_vs_truth="results/simulation/model_vs_truth_beta_shift.csv",
@@ -15,18 +16,19 @@ rule supplemental_sim_figures:
     params:
         notebook="notebooks/supplemental/supplemental_sim_figures.ipynb",
         pm_args=PAPERMILL_ARGS,
+    log:
+        "logs/supplemental_sim_figures.log",
     shell:
         """
-        papermill {params.notebook} {output.executed_notebook} \
-            {params.pm_args} && \
-        jupyter nbconvert --to html {output.executed_notebook} \
-            --output-dir $(dirname {output.html}) \
-            --output $(basename {output.html})
+        bash workflow/scripts/run_notebook.sh \
+            {params.notebook} {output.executed_notebook} {output.html} {log} \
+            {params.pm_args}
         """
 
 
 rule supplemental_structure:
     input:
+        config="config/config.yaml",
         mutations_df="results/spike_analysis/mutations_df.csv",
         alignment="data/clustalo-I20230702-193723-0021-19090519-p1m.clustal_num",
     output:
@@ -36,11 +38,11 @@ rule supplemental_structure:
     params:
         notebook="notebooks/supplemental/supplemental_structure.ipynb",
         pm_args=PAPERMILL_ARGS,
+    log:
+        "logs/supplemental_structure.log",
     shell:
         """
-        papermill {params.notebook} {output.executed_notebook} \
-            {params.pm_args} && \
-        jupyter nbconvert --to html {output.executed_notebook} \
-            --output-dir $(dirname {output.html}) \
-            --output $(basename {output.html})
+        bash workflow/scripts/run_notebook.sh \
+            {params.notebook} {output.executed_notebook} {output.html} {log} \
+            {params.pm_args}
         """

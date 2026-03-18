@@ -12,18 +12,19 @@ rule sim_01_data_simulation:
     params:
         notebook="notebooks/simulation/sim_01_data_simulation.ipynb",
         pm_args=PAPERMILL_ARGS,
+    log:
+        "logs/sim_01_data_simulation.log",
     shell:
         """
-        papermill {params.notebook} {output.executed_notebook} \
-            {params.pm_args} && \
-        jupyter nbconvert --to html {output.executed_notebook} \
-            --output-dir $(dirname {output.html}) \
-            --output $(basename {output.html})
+        bash workflow/scripts/run_notebook.sh \
+            {params.notebook} {output.executed_notebook} {output.html} {log} \
+            {params.pm_args}
         """
 
 
 rule sim_02_model_fitting:
     input:
+        config="config/config.yaml",
         func_scores="results/simulation/simulated_func_scores.csv",
     output:
         fit_collection="results/simulation/fit_collection.pkl",
@@ -32,20 +33,21 @@ rule sim_02_model_fitting:
     params:
         notebook="notebooks/simulation/sim_02_model_fitting.ipynb",
         pm_args=PAPERMILL_ARGS,
+    log:
+        "logs/sim_02_model_fitting.log",
     resources:
         gpu=1,
     shell:
         """
-        papermill {params.notebook} {output.executed_notebook} \
-            {params.pm_args} && \
-        jupyter nbconvert --to html {output.executed_notebook} \
-            --output-dir $(dirname {output.html}) \
-            --output $(basename {output.html})
+        bash workflow/scripts/run_notebook.sh \
+            {params.notebook} {output.executed_notebook} {output.html} {log} \
+            {params.pm_args}
         """
 
 
 rule sim_03_evaluation:
     input:
+        config="config/config.yaml",
         fit_collection="results/simulation/fit_collection.pkl",
         muteffects="results/simulation/simulated_muteffects.csv",
     output:
@@ -59,18 +61,19 @@ rule sim_03_evaluation:
     params:
         notebook="notebooks/simulation/sim_03_evaluation.ipynb",
         pm_args=PAPERMILL_ARGS,
+    log:
+        "logs/sim_03_evaluation.log",
     shell:
         """
-        papermill {params.notebook} {output.executed_notebook} \
-            {params.pm_args} && \
-        jupyter nbconvert --to html {output.executed_notebook} \
-            --output-dir $(dirname {output.html}) \
-            --output $(basename {output.html})
+        bash workflow/scripts/run_notebook.sh \
+            {params.notebook} {output.executed_notebook} {output.html} {log} \
+            {params.pm_args}
         """
 
 
 rule sim_04_visualization:
     input:
+        config="config/config.yaml",
         fit_collection="results/simulation/fit_collection.pkl",
         muteffects="results/simulation/simulated_muteffects.csv",
         model_vs_truth="results/simulation/model_vs_truth_beta_shift.csv",
@@ -84,11 +87,11 @@ rule sim_04_visualization:
     params:
         notebook="notebooks/simulation/sim_04_visualization.ipynb",
         pm_args=PAPERMILL_ARGS,
+    log:
+        "logs/sim_04_visualization.log",
     shell:
         """
-        papermill {params.notebook} {output.executed_notebook} \
-            {params.pm_args} && \
-        jupyter nbconvert --to html {output.executed_notebook} \
-            --output-dir $(dirname {output.html}) \
-            --output $(basename {output.html})
+        bash workflow/scripts/run_notebook.sh \
+            {params.notebook} {output.executed_notebook} {output.html} {log} \
+            {params.pm_args}
         """
