@@ -1,18 +1,10 @@
 """Main Snakefile for SARS-CoV-2 spike multidms analysis pipeline."""
 
-import copy
+import sys
 import yaml
 
-
-def deep_merge(base, override):
-    """Recursively merge override dict into base dict."""
-    result = copy.deepcopy(base)
-    for key, value in override.items():
-        if key in result and isinstance(result[key], dict) and isinstance(value, dict):
-            result[key] = deep_merge(result[key], value)
-        else:
-            result[key] = copy.deepcopy(value)
-    return result
+sys.path.insert(0, workflow.basedir + "/..")
+from notebooks._common import deep_merge
 
 
 configfile: "config/config.yaml"
