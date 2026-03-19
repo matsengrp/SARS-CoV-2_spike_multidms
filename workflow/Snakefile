@@ -20,13 +20,22 @@ def deep_merge(base, override):
 configfile: "config/config.yaml"
 
 
-# Load profile overrides if specified
+# Load profile overrides if specified.
+# CLI --config values (run_name, gpu_ids, etc.) must take priority over
+# profile overrides, so we snapshot them before merging the profile and
+# restore them after.
+_cli_keys = {"run_name", "profile", "gpu_ids", "pipelines"}
+_cli_overrides = {k: copy.deepcopy(config[k]) for k in _cli_keys if k in config}
+
 profile = config.get("profile", "")
 if profile:
     with open(f"config/profile_{profile}.yaml") as f:
         overrides = yaml.safe_load(f)
         if overrides:
             config = deep_merge(config, overrides)
+
+# Restore CLI overrides so they win over profile defaults
+config.update(_cli_overrides)
 
 
 # ---------------------------------------------------------------------------
