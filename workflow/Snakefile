@@ -75,8 +75,17 @@ PAPERMILL_ARGS = papermill_args()
 #   across all gpu_ids.
 # - Analysis notebooks that just load a model claim 1 GPU (gpu=GPU_LOAD).
 # Pass --resources gpu=N_GPUS on the command line to enforce the constraint.
-_gpu_ids = config.get("gpu_ids") or []
-N_GPUS = len(_gpu_ids) if _gpu_ids else 0
+# gpu_ids can be: a YAML list [0,1,2,3], a comma-separated CLI string "0,1,2,3",
+# or null/None for CPU-only mode.
+_raw_gpu_ids = config.get("gpu_ids")
+if isinstance(_raw_gpu_ids, str):
+    _gpu_ids = [int(x) for x in _raw_gpu_ids.split(",") if x.strip()]
+elif isinstance(_raw_gpu_ids, list):
+    _gpu_ids = [int(x) for x in _raw_gpu_ids]
+else:
+    _gpu_ids = []
+config["gpu_ids"] = _gpu_ids or None  # normalize back for notebooks
+N_GPUS = len(_gpu_ids)
 GPU_FIT = max(N_GPUS, 1)   # fitting notebooks: claim all GPUs (min 1 for CPU fallback)
 GPU_LOAD = 1                # analysis notebooks: claim 1 GPU for inference
 

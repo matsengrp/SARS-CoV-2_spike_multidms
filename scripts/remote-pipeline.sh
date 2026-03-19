@@ -58,15 +58,14 @@ eval "$(python3 "$SCRIPT_DIR/remote_config.py" $RC_ARGS)"
 PIXI_ENV="${pixi_env:-cuda}"
 TMUX_SESSION="smk-${RUN_NAME}"
 
-# Determine available GPU count from config for Snakemake resource scheduling.
-# gpu_ids in config.yaml controls which GPUs fit_models uses; we tell Snakemake
-# how many GPU "slots" are available so it can schedule jobs accordingly.
+# Determine available GPU count for Snakemake resource scheduling.
+# Checks (in priority order): CLI --config gpu_ids=..., profile override, base config.
 N_GPUS=$(python3 -c "
-import yaml, sys
+import yaml
 cfg = yaml.safe_load(open('$SCRIPT_DIR/../config/config.yaml'))
+config_vals = '$CONFIG_VALS'
 # Check for profile override
-profile_val = '$CONFIG_VALS'
-for kv in profile_val.split():
+for kv in config_vals.split():
     if kv.startswith('profile='):
         p = kv.split('=',1)[1]
         try:
@@ -75,6 +74,11 @@ for kv in profile_val.split():
                 cfg['gpu_ids'] = override['gpu_ids']
         except FileNotFoundError:
             pass
+# CLI gpu_ids override takes highest priority
+for kv in config_vals.split():
+    if kv.startswith('gpu_ids='):
+        v = kv.split('=',1)[1]
+        cfg['gpu_ids'] = [int(x) for x in v.split(',') if x.strip()]
 ids = cfg.get('gpu_ids') or []
 print(len(ids) if ids else 1)
 ")
