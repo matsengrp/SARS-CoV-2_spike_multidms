@@ -75,6 +75,12 @@ def papermill_args(config_path="config/config.yaml"):
 
 PAPERMILL_ARGS = papermill_args()
 
+# JAX environment: disable memory pre-allocation so multiple notebook processes
+# can share GPUs without OOM, and set visible devices from config.
+_jax_env_parts = ["XLA_PYTHON_CLIENT_PREALLOCATE=false"]
+# (CUDA_VISIBLE_DEVICES is set after gpu_ids parsing below)
+
+
 # ---------------------------------------------------------------------------
 # GPU resource scheduling
 # ---------------------------------------------------------------------------
@@ -97,6 +103,11 @@ config["gpu_ids"] = _gpu_ids or None  # normalize back for notebooks
 N_GPUS = len(_gpu_ids)
 GPU_FIT = max(N_GPUS, 1)   # fitting notebooks: claim all GPUs (min 1 for CPU fallback)
 GPU_LOAD = 1                # analysis notebooks: claim 1 GPU for inference
+
+# Finish building JAX env prefix for shell commands
+if _gpu_ids:
+    _jax_env_parts.append(f"CUDA_VISIBLE_DEVICES={','.join(str(g) for g in _gpu_ids)}")
+JAX_ENV = " ".join(_jax_env_parts)
 
 # Determine which pipelines to run
 PIPELINES = config.get("pipelines", ["simulation", "spike"])

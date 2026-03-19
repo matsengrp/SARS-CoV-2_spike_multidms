@@ -12,9 +12,10 @@ rule sim_01_data_simulation:
     params:
         notebook="notebooks/simulation/sim_01_data_simulation.ipynb",
         pm_args=PAPERMILL_ARGS,
+        jax_env=JAX_ENV,
     shell:
         """
-        papermill {params.notebook} {output.executed_notebook} \
+        {params.jax_env} papermill {params.notebook} {output.executed_notebook} \
             {params.pm_args} && \
         jupyter nbconvert --to html {output.executed_notebook} \
             --output-dir $(dirname {output.html}) \
@@ -32,11 +33,12 @@ rule sim_02_model_fitting:
     params:
         notebook="notebooks/simulation/sim_02_model_fitting.ipynb",
         pm_args=PAPERMILL_ARGS,
+        jax_env=JAX_ENV,
     resources:
         gpu=GPU_FIT,
     shell:
         """
-        papermill {params.notebook} {output.executed_notebook} \
+        {params.jax_env} papermill {params.notebook} {output.executed_notebook} \
             {params.pm_args} && \
         jupyter nbconvert --to html {output.executed_notebook} \
             --output-dir $(dirname {output.html}) \
@@ -59,11 +61,12 @@ rule sim_03_evaluation:
     params:
         notebook="notebooks/simulation/sim_03_evaluation.ipynb",
         pm_args=PAPERMILL_ARGS,
+        jax_env=JAX_ENV,
     resources:
         gpu=GPU_FIT,
     shell:
         """
-        papermill {params.notebook} {output.executed_notebook} \
+        {params.jax_env} papermill {params.notebook} {output.executed_notebook} \
             {params.pm_args} && \
         jupyter nbconvert --to html {output.executed_notebook} \
             --output-dir $(dirname {output.html}) \
@@ -86,9 +89,10 @@ rule sim_04_visualization:
     params:
         notebook="notebooks/simulation/sim_04_visualization.ipynb",
         pm_args=PAPERMILL_ARGS,
+        jax_env=JAX_ENV,
     shell:
         """
-        papermill {params.notebook} {output.executed_notebook} \
+        {params.jax_env} papermill {params.notebook} {output.executed_notebook} \
             {params.pm_args} && \
         jupyter nbconvert --to html {output.executed_notebook} \
             --output-dir $(dirname {output.html}) \

@@ -13,9 +13,10 @@ rule spike_01_data_loading:
     params:
         notebook="notebooks/spike/spike_01_data_loading.ipynb",
         pm_args=PAPERMILL_ARGS,
+        jax_env=JAX_ENV,
     shell:
         """
-        papermill {params.notebook} {output.executed_notebook} \
+        {params.jax_env} papermill {params.notebook} {output.executed_notebook} \
             {params.pm_args} && \
         jupyter nbconvert --to html {output.executed_notebook} \
             --output-dir $(dirname {output.html}) \
@@ -33,9 +34,10 @@ rule spike_02_exploratory_stats:
     params:
         notebook="notebooks/spike/spike_02_exploratory_stats.ipynb",
         pm_args=PAPERMILL_ARGS,
+        jax_env=JAX_ENV,
     shell:
         """
-        papermill {params.notebook} {output.executed_notebook} \
+        {params.jax_env} papermill {params.notebook} {output.executed_notebook} \
             {params.pm_args} && \
         jupyter nbconvert --to html {output.executed_notebook} \
             --output-dir $(dirname {output.html}) \
@@ -53,11 +55,12 @@ rule spike_03_fit_models:
     params:
         notebook="notebooks/spike/spike_03_fit_models.ipynb",
         pm_args=PAPERMILL_ARGS,
+        jax_env=JAX_ENV,
     resources:
         gpu=GPU_FIT,
     shell:
         """
-        papermill {params.notebook} {output.executed_notebook} \
+        {params.jax_env} papermill {params.notebook} {output.executed_notebook} \
             {params.pm_args} && \
         jupyter nbconvert --to html {output.executed_notebook} \
             --output-dir $(dirname {output.html}) \
@@ -75,9 +78,10 @@ rule spike_04_model_evaluation:
     params:
         notebook="notebooks/spike/spike_04_model_evaluation.ipynb",
         pm_args=PAPERMILL_ARGS,
+        jax_env=JAX_ENV,
     shell:
         """
-        papermill {params.notebook} {output.executed_notebook} \
+        {params.jax_env} papermill {params.notebook} {output.executed_notebook} \
             {params.pm_args} && \
         jupyter nbconvert --to html {output.executed_notebook} \
             --output-dir $(dirname {output.html}) \
@@ -97,11 +101,12 @@ rule spike_05_cross_validation:
     params:
         notebook="notebooks/spike/spike_05_cross_validation.ipynb",
         pm_args=PAPERMILL_ARGS,
+        jax_env=JAX_ENV,
     resources:
         gpu=GPU_FIT,
     shell:
         """
-        papermill {params.notebook} {output.executed_notebook} \
+        {params.jax_env} papermill {params.notebook} {output.executed_notebook} \
             {params.pm_args} && \
         jupyter nbconvert --to html {output.executed_notebook} \
             --output-dir $(dirname {output.html}) \
@@ -119,11 +124,12 @@ rule spike_06_global_epistasis:
     params:
         notebook="notebooks/spike/spike_06_global_epistasis.ipynb",
         pm_args=PAPERMILL_ARGS,
+        jax_env=JAX_ENV,
     resources:
         gpu=GPU_LOAD,
     shell:
         """
-        papermill {params.notebook} {output.executed_notebook} \
+        {params.jax_env} papermill {params.notebook} {output.executed_notebook} \
             {params.pm_args} && \
         jupyter nbconvert --to html {output.executed_notebook} \
             --output-dir $(dirname {output.html}) \
@@ -142,11 +148,12 @@ rule spike_07_shifted_mutations:
     params:
         notebook="notebooks/spike/spike_07_shifted_mutations.ipynb",
         pm_args=PAPERMILL_ARGS,
+        jax_env=JAX_ENV,
     resources:
         gpu=GPU_LOAD,
     shell:
         """
-        papermill {params.notebook} {output.executed_notebook} \
+        {params.jax_env} papermill {params.notebook} {output.executed_notebook} \
             {params.pm_args} && \
         jupyter nbconvert --to html {output.executed_notebook} \
             --output-dir $(dirname {output.html}) \
@@ -165,11 +172,12 @@ rule spike_08_naive_comparison:
     params:
         notebook="notebooks/spike/spike_08_naive_comparison.ipynb",
         pm_args=PAPERMILL_ARGS,
+        jax_env=JAX_ENV,
     resources:
         gpu=GPU_FIT,
     shell:
         """
-        papermill {params.notebook} {output.executed_notebook} \
+        {params.jax_env} papermill {params.notebook} {output.executed_notebook} \
             {params.pm_args} && \
         jupyter nbconvert --to html {output.executed_notebook} \
             --output-dir $(dirname {output.html}) \
@@ -188,11 +196,12 @@ rule spike_09_linear_comparison:
     params:
         notebook="notebooks/spike/spike_09_linear_comparison.ipynb",
         pm_args=PAPERMILL_ARGS,
+        jax_env=JAX_ENV,
     resources:
         gpu=GPU_FIT,
     shell:
         """
-        papermill {params.notebook} {output.executed_notebook} \
+        {params.jax_env} papermill {params.notebook} {output.executed_notebook} \
             {params.pm_args} && \
         jupyter nbconvert --to html {output.executed_notebook} \
             --output-dir $(dirname {output.html}) \
@@ -212,11 +221,12 @@ rule spike_10_validation:
     params:
         notebook="notebooks/spike/spike_10_validation.ipynb",
         pm_args=PAPERMILL_ARGS,
+        jax_env=JAX_ENV,
     resources:
         gpu=GPU_LOAD,
     shell:
         """
-        papermill {params.notebook} {output.executed_notebook} \
+        {params.jax_env} papermill {params.notebook} {output.executed_notebook} \
             {params.pm_args} && \
         jupyter nbconvert --to html {output.executed_notebook} \
             --output-dir $(dirname {output.html}) \
@@ -234,11 +244,12 @@ rule spike_11_reference_sensitivity:
     params:
         notebook="notebooks/spike/spike_11_reference_sensitivity.ipynb",
         pm_args=PAPERMILL_ARGS,
+        jax_env=JAX_ENV,
     resources:
         gpu=GPU_FIT,
     shell:
         """
-        papermill {params.notebook} {output.executed_notebook} \
+        {params.jax_env} papermill {params.notebook} {output.executed_notebook} \
             {params.pm_args} && \
         jupyter nbconvert --to html {output.executed_notebook} \
             --output-dir $(dirname {output.html}) \
@@ -258,9 +269,10 @@ rule spike_12_sparsity_correlation:
     params:
         notebook="notebooks/spike/spike_12_sparsity_correlation.ipynb",
         pm_args=PAPERMILL_ARGS,
+        jax_env=JAX_ENV,
     shell:
         """
-        papermill {params.notebook} {output.executed_notebook} \
+        {params.jax_env} papermill {params.notebook} {output.executed_notebook} \
             {params.pm_args} && \
         jupyter nbconvert --to html {output.executed_notebook} \
             --output-dir $(dirname {output.html}) \

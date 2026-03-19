@@ -179,19 +179,24 @@ def combine_replicate_muts(
     """
     mutations_dfs = []
     for replicate, fit in fit_dict.items():
-        fit_mut_df = fit.get_mutations_df(**kwargs)
+        fit_mut_df = fit.get_mutations_df(**kwargs).reset_index()
+        # Ensure 'mutation' column exists for merging
+        if "mutation" not in fit_mut_df.columns and fit_mut_df.index.name == "mutation":
+            fit_mut_df = fit_mut_df.reset_index()
         fit_mut_df = fit_mut_df.drop(
             [c for c in fit_mut_df.columns if "times_seen" in c], axis=1
         )
         new_column_name_map = {
-            c: f"{replicate}_{c}" for c in fit_mut_df.columns
+            c: f"{replicate}_{c}"
+            for c in fit_mut_df.columns
+            if c != "mutation"
         }
         fit_mut_df = fit_mut_df.rename(new_column_name_map, axis=1)
         mutations_dfs.append(fit_mut_df)
 
     mut_df = reduce(
         lambda left, right: pd.merge(
-            left, right, left_index=True, right_index=True, how=how
+            left, right, on="mutation", how=how
         ),
         mutations_dfs,
     )
@@ -202,7 +207,7 @@ def combine_replicate_muts(
         ref_df = fit.get_mutations_df(**kwargs)
         all_cols.update(c for c in ref_df.columns if "times_seen" not in c)
 
-    meta_cols = ["wts", "sites", "muts"]
+    meta_cols = ["mutation", "wts", "sites", "muts"]
     param_cols = sorted(
         c for c in all_cols if c not in meta_cols and c != "mutation"
     )

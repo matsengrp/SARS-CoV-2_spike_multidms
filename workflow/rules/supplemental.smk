@@ -15,9 +15,10 @@ rule supplemental_sim_figures:
     params:
         notebook="notebooks/supplemental/supplemental_sim_figures.ipynb",
         pm_args=PAPERMILL_ARGS,
+        jax_env=JAX_ENV,
     shell:
         """
-        papermill {params.notebook} {output.executed_notebook} \
+        {params.jax_env} papermill {params.notebook} {output.executed_notebook} \
             {params.pm_args} && \
         jupyter nbconvert --to html {output.executed_notebook} \
             --output-dir $(dirname {output.html}) \
@@ -36,9 +37,10 @@ rule supplemental_structure:
     params:
         notebook="notebooks/supplemental/supplemental_structure.ipynb",
         pm_args=PAPERMILL_ARGS,
+        jax_env=JAX_ENV,
     shell:
         """
-        papermill {params.notebook} {output.executed_notebook} \
+        {params.jax_env} papermill {params.notebook} {output.executed_notebook} \
             {params.pm_args} && \
         jupyter nbconvert --to html {output.executed_notebook} \
             --output-dir $(dirname {output.html}) \
