@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 # Sync local code to remote server via git push + SSH pull.
 #
-# Usage: scripts/remote-sync.sh
+# Usage: scripts/remote-sync.sh [key=value overrides for remote_config.py]
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
-# Load remote config
-eval "$(python3 "$SCRIPT_DIR/remote_config.py")"
+# Load remote config (pass through any override args like host=orca03)
+eval "$(python3 "$SCRIPT_DIR/remote_config.py" "$@")"
 
 BRANCH="${branch:-main}"
 

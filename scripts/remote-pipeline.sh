@@ -1,15 +1,22 @@
 #!/usr/bin/env bash
 # Sync code and launch pipeline on remote server in a tmux session.
 #
-# Usage: scripts/remote-pipeline.sh <run_name> [extra snakemake args...]
+# Usage: scripts/remote-pipeline.sh [--host HOST] <run_name> [extra snakemake args...]
 #
 # Example:
 #   scripts/remote-pipeline.sh sigmoid-v2
-#   scripts/remote-pipeline.sh sigmoid-v2 --config profile=test
+#   scripts/remote-pipeline.sh --host orca03 sigmoid-v2 --config profile=test
 set -euo pipefail
 
+# Parse --host override (must come before run_name)
+HOST_OVERRIDE=""
+if [ "${1:-}" = "--host" ]; then
+    HOST_OVERRIDE="$2"
+    shift 2
+fi
+
 if [ $# -lt 1 ]; then
-    echo "Usage: $0 <run_name> [extra snakemake args...]"
+    echo "Usage: $0 [--host HOST] <run_name> [extra snakemake args...]"
     exit 1
 fi
 
@@ -36,11 +43,17 @@ done
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
-# Sync first
-"$SCRIPT_DIR/remote-sync.sh"
+# Build remote_config.py override args
+RC_ARGS=""
+if [ -n "$HOST_OVERRIDE" ]; then
+    RC_ARGS="host=${HOST_OVERRIDE}"
+fi
 
-# Load remote config
-eval "$(python3 "$SCRIPT_DIR/remote_config.py")"
+# Sync first (pass host override)
+"$SCRIPT_DIR/remote-sync.sh" $RC_ARGS
+
+# Load remote config (with override)
+eval "$(python3 "$SCRIPT_DIR/remote_config.py" $RC_ARGS)"
 
 PIXI_ENV="${pixi_env:-cuda}"
 TMUX_SESSION="smk-${RUN_NAME}"

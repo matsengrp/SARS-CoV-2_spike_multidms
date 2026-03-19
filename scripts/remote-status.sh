@@ -1,15 +1,26 @@
 #!/usr/bin/env bash
 # Check remote git status and tmux session for a named run.
 #
-# Usage: scripts/remote-status.sh [run_name]
+# Usage: scripts/remote-status.sh [--host HOST] [run_name]
 set -euo pipefail
+
+# Parse --host override
+HOST_OVERRIDE=""
+if [ "${1:-}" = "--host" ]; then
+    HOST_OVERRIDE="$2"
+    shift 2
+fi
 
 RUN_NAME="${1:-}"
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
-# Load remote config
-eval "$(python3 "$SCRIPT_DIR/remote_config.py")"
+# Load remote config (with override)
+RC_ARGS=""
+if [ -n "$HOST_OVERRIDE" ]; then
+    RC_ARGS="host=${HOST_OVERRIDE}"
+fi
+eval "$(python3 "$SCRIPT_DIR/remote_config.py" $RC_ARGS)"
 
 echo "==> Remote git status ($host:$remote_dir):"
 ssh "$host" "cd $remote_dir && git log --oneline -3 && echo && git status -s"

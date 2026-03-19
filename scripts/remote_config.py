@@ -3,6 +3,11 @@
 
 Uses a simple key:value parser (no PyYAML dependency) so this works with
 the system Python outside of pixi.
+
+CLI overrides (passed as key=value arguments) take precedence over the
+config file.  Example::
+
+    python3 remote_config.py host=orca03
 """
 
 import os
@@ -17,7 +22,7 @@ DEFAULTS = {
 }
 
 
-def load_remote_config():
+def load_remote_config(overrides=None):
     """Load and validate remote configuration.
 
     Expected format (simple YAML subset)::
@@ -26,6 +31,11 @@ def load_remote_config():
         remote_dir: /home/user/projects/SARS-CoV-2_spike_multidms
         branch: main          # optional, default: main
         pixi_env: cuda        # optional, default: cuda
+
+    Parameters
+    ----------
+    overrides : dict, optional
+        Key/value pairs that override the config file.
     """
     if not os.path.exists(CONFIG_PATH):
         print(f"Error: Remote config not found at {CONFIG_PATH}", file=sys.stderr)
@@ -54,6 +64,10 @@ def load_remote_config():
             key, _, value = line.partition(":")
             cfg[key.strip()] = value.strip()
 
+    # Apply CLI overrides
+    if overrides:
+        cfg.update(overrides)
+
     for key in REQUIRED_KEYS:
         if key not in cfg:
             print(
@@ -69,7 +83,14 @@ def load_remote_config():
 
 
 if __name__ == "__main__":
-    cfg = load_remote_config()
+    # Parse CLI overrides: key=value arguments
+    cli_overrides = {}
+    for arg in sys.argv[1:]:
+        if "=" in arg:
+            k, _, v = arg.partition("=")
+            cli_overrides[k] = v
+
+    cfg = load_remote_config(cli_overrides)
     # Output as shell-friendly key=value pairs
     for key, value in cfg.items():
         print(f"{key}={value}")
