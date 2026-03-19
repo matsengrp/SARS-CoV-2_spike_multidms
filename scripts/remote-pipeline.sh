@@ -30,8 +30,8 @@ TMUX_SESSION="smk-${RUN_NAME}"
 
 echo "==> Launching pipeline on $host (tmux: $TMUX_SESSION)..."
 
-# Build the remote command — use double quotes throughout for proper expansion
-REMOTE_CMD="cd ${remote_dir} && pixi run -e ${PIXI_ENV} snakemake --configfile config/config.yaml --config run_name=${RUN_NAME} ${EXTRA_ARGS} -j8"
+# Build the remote command — ensure pixi is on PATH and use double quotes for proper expansion
+REMOTE_CMD="export PATH=\$HOME/.pixi/bin:\$PATH && cd ${remote_dir} && pixi run -e ${PIXI_ENV} snakemake --configfile config/config.yaml --config run_name=${RUN_NAME} ${EXTRA_ARGS} -j8"
 
 # Use tmux send-keys to avoid nested quoting issues
 if ssh "$host" "tmux has-session -t ${TMUX_SESSION} 2>/dev/null"; then
