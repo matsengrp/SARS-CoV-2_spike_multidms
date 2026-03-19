@@ -15,7 +15,24 @@ fi
 
 RUN_NAME="$1"
 shift
-EXTRA_ARGS="${*:-}"
+
+# Collect extra args, merging any --config values into a single --config flag
+# with run_name to avoid Snakemake's --config replacement behavior.
+CONFIG_VALS="run_name=${RUN_NAME}"
+OTHER_ARGS=""
+while [ $# -gt 0 ]; do
+    if [ "$1" = "--config" ]; then
+        shift
+        # Consume all key=value pairs until next flag
+        while [ $# -gt 0 ] && [[ "$1" != -* ]]; do
+            CONFIG_VALS="${CONFIG_VALS} $1"
+            shift
+        done
+    else
+        OTHER_ARGS="${OTHER_ARGS} $1"
+        shift
+    fi
+done
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 
@@ -30,8 +47,8 @@ TMUX_SESSION="smk-${RUN_NAME}"
 
 echo "==> Launching pipeline on $host (tmux: $TMUX_SESSION)..."
 
-# Build the remote command — ensure pixi is on PATH and use double quotes for proper expansion
-REMOTE_CMD="export PATH=\$HOME/.pixi/bin:\$PATH && cd ${remote_dir} && pixi run -e ${PIXI_ENV} snakemake --configfile config/config.yaml --config run_name=${RUN_NAME} ${EXTRA_ARGS} -j8"
+# Build the remote command — single --config flag with all config values merged
+REMOTE_CMD="export PATH=\$HOME/.pixi/bin:\$PATH && cd ${remote_dir} && pixi run -e ${PIXI_ENV} snakemake --configfile config/config.yaml --config ${CONFIG_VALS}${OTHER_ARGS} -j8"
 
 # Use tmux send-keys to avoid nested quoting issues
 if ssh "$host" "tmux has-session -t ${TMUX_SESSION} 2>/dev/null"; then
