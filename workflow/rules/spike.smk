@@ -119,6 +119,8 @@ rule spike_06_global_epistasis:
     params:
         notebook="notebooks/spike/spike_06_global_epistasis.ipynb",
         pm_args=PAPERMILL_ARGS,
+    resources:
+        gpu=1,
     shell:
         """
         papermill {params.notebook} {output.executed_notebook} \
@@ -140,6 +142,8 @@ rule spike_07_shifted_mutations:
     params:
         notebook="notebooks/spike/spike_07_shifted_mutations.ipynb",
         pm_args=PAPERMILL_ARGS,
+    resources:
+        gpu=1,
     shell:
         """
         papermill {params.notebook} {output.executed_notebook} \
@@ -208,6 +212,8 @@ rule spike_10_validation:
     params:
         notebook="notebooks/spike/spike_10_validation.ipynb",
         pm_args=PAPERMILL_ARGS,
+    resources:
+        gpu=1,
     shell:
         """
         papermill {params.notebook} {output.executed_notebook} \

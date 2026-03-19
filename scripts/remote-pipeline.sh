@@ -48,7 +48,7 @@ TMUX_SESSION="smk-${RUN_NAME}"
 echo "==> Launching pipeline on $host (tmux: $TMUX_SESSION)..."
 
 # Build the remote command — single --config flag with all config values merged
-REMOTE_CMD="export PATH=\$HOME/.pixi/bin:\$PATH && cd ${remote_dir} && pixi run -e ${PIXI_ENV} snakemake --configfile config/config.yaml --config ${CONFIG_VALS}${OTHER_ARGS} -j8"
+REMOTE_CMD="export PATH=\$HOME/.pixi/bin:\$PATH && cd ${remote_dir} && pixi run -e ${PIXI_ENV} snakemake --configfile config/config.yaml --config ${CONFIG_VALS} --resources gpu=1${OTHER_ARGS} -j8"
 
 # Use tmux send-keys to avoid nested quoting issues
 if ssh "$host" "tmux has-session -t ${TMUX_SESSION} 2>/dev/null"; then
