@@ -66,6 +66,20 @@ def papermill_args(config_path="config/config.yaml"):
 
 PAPERMILL_ARGS = papermill_args()
 
+# ---------------------------------------------------------------------------
+# GPU resource scheduling
+# ---------------------------------------------------------------------------
+# gpu_ids from config controls which physical GPUs fit_models uses.
+# N_GPUS tells Snakemake how many GPU "slots" are available for scheduling.
+# - Fitting notebooks claim ALL GPUs (gpu=N_GPUS) since fit_models round-robins
+#   across all gpu_ids.
+# - Analysis notebooks that just load a model claim 1 GPU (gpu=GPU_LOAD).
+# Pass --resources gpu=N_GPUS on the command line to enforce the constraint.
+_gpu_ids = config.get("gpu_ids") or []
+N_GPUS = len(_gpu_ids) if _gpu_ids else 0
+GPU_FIT = max(N_GPUS, 1)   # fitting notebooks: claim all GPUs (min 1 for CPU fallback)
+GPU_LOAD = 1                # analysis notebooks: claim 1 GPU for inference
+
 # Determine which pipelines to run
 PIPELINES = config.get("pipelines", ["simulation", "spike"])
 

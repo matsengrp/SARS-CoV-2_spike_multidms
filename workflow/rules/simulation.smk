@@ -33,7 +33,7 @@ rule sim_02_model_fitting:
         notebook="notebooks/simulation/sim_02_model_fitting.ipynb",
         pm_args=PAPERMILL_ARGS,
     resources:
-        gpu=1,
+        gpu=GPU_FIT,
     shell:
         """
         papermill {params.notebook} {output.executed_notebook} \
@@ -59,6 +59,8 @@ rule sim_03_evaluation:
     params:
         notebook="notebooks/simulation/sim_03_evaluation.ipynb",
         pm_args=PAPERMILL_ARGS,
+    resources:
+        gpu=GPU_FIT,
     shell:
         """
         papermill {params.notebook} {output.executed_notebook} \

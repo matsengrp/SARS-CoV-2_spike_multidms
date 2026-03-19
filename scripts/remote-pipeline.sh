@@ -45,10 +45,32 @@ eval "$(python3 "$SCRIPT_DIR/remote_config.py")"
 PIXI_ENV="${pixi_env:-cuda}"
 TMUX_SESSION="smk-${RUN_NAME}"
 
-echo "==> Launching pipeline on $host (tmux: $TMUX_SESSION)..."
+# Determine available GPU count from config for Snakemake resource scheduling.
+# gpu_ids in config.yaml controls which GPUs fit_models uses; we tell Snakemake
+# how many GPU "slots" are available so it can schedule jobs accordingly.
+N_GPUS=$(python3 -c "
+import yaml, sys
+cfg = yaml.safe_load(open('$SCRIPT_DIR/../config/config.yaml'))
+# Check for profile override
+profile_val = '$CONFIG_VALS'
+for kv in profile_val.split():
+    if kv.startswith('profile='):
+        p = kv.split('=',1)[1]
+        try:
+            override = yaml.safe_load(open(f'$SCRIPT_DIR/../config/profile_{p}.yaml'))
+            if override and 'gpu_ids' in override:
+                cfg['gpu_ids'] = override['gpu_ids']
+        except FileNotFoundError:
+            pass
+ids = cfg.get('gpu_ids') or []
+print(len(ids) if ids else 1)
+")
+RESOURCE_ARGS="--resources gpu=${N_GPUS}"
+
+echo "==> Launching pipeline on $host (tmux: $TMUX_SESSION, gpus: $N_GPUS)..."
 
 # Build the remote command — single --config flag with all config values merged
-REMOTE_CMD="export PATH=\$HOME/.pixi/bin:\$PATH && cd ${remote_dir} && pixi run -e ${PIXI_ENV} snakemake --configfile config/config.yaml --config ${CONFIG_VALS} --resources gpu=1${OTHER_ARGS} -j8"
+REMOTE_CMD="export PATH=\$HOME/.pixi/bin:\$PATH && cd ${remote_dir} && pixi run -e ${PIXI_ENV} snakemake --configfile config/config.yaml --config ${CONFIG_VALS} ${RESOURCE_ARGS}${OTHER_ARGS} -j8"
 
 # Use tmux send-keys to avoid nested quoting issues
 if ssh "$host" "tmux has-session -t ${TMUX_SESSION} 2>/dev/null"; then

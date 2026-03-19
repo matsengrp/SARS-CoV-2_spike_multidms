@@ -54,7 +54,7 @@ rule spike_03_fit_models:
         notebook="notebooks/spike/spike_03_fit_models.ipynb",
         pm_args=PAPERMILL_ARGS,
     resources:
-        gpu=1,
+        gpu=GPU_FIT,
     shell:
         """
         papermill {params.notebook} {output.executed_notebook} \
@@ -98,7 +98,7 @@ rule spike_05_cross_validation:
         notebook="notebooks/spike/spike_05_cross_validation.ipynb",
         pm_args=PAPERMILL_ARGS,
     resources:
-        gpu=1,
+        gpu=GPU_FIT,
     shell:
         """
         papermill {params.notebook} {output.executed_notebook} \
@@ -120,7 +120,7 @@ rule spike_06_global_epistasis:
         notebook="notebooks/spike/spike_06_global_epistasis.ipynb",
         pm_args=PAPERMILL_ARGS,
     resources:
-        gpu=1,
+        gpu=GPU_LOAD,
     shell:
         """
         papermill {params.notebook} {output.executed_notebook} \
@@ -143,7 +143,7 @@ rule spike_07_shifted_mutations:
         notebook="notebooks/spike/spike_07_shifted_mutations.ipynb",
         pm_args=PAPERMILL_ARGS,
     resources:
-        gpu=1,
+        gpu=GPU_LOAD,
     shell:
         """
         papermill {params.notebook} {output.executed_notebook} \
@@ -166,7 +166,7 @@ rule spike_08_naive_comparison:
         notebook="notebooks/spike/spike_08_naive_comparison.ipynb",
         pm_args=PAPERMILL_ARGS,
     resources:
-        gpu=1,
+        gpu=GPU_FIT,
     shell:
         """
         papermill {params.notebook} {output.executed_notebook} \
@@ -189,7 +189,7 @@ rule spike_09_linear_comparison:
         notebook="notebooks/spike/spike_09_linear_comparison.ipynb",
         pm_args=PAPERMILL_ARGS,
     resources:
-        gpu=1,
+        gpu=GPU_FIT,
     shell:
         """
         papermill {params.notebook} {output.executed_notebook} \
@@ -213,7 +213,7 @@ rule spike_10_validation:
         notebook="notebooks/spike/spike_10_validation.ipynb",
         pm_args=PAPERMILL_ARGS,
     resources:
-        gpu=1,
+        gpu=GPU_LOAD,
     shell:
         """
         papermill {params.notebook} {output.executed_notebook} \
@@ -235,7 +235,7 @@ rule spike_11_reference_sensitivity:
         notebook="notebooks/spike/spike_11_reference_sensitivity.ipynb",
         pm_args=PAPERMILL_ARGS,
     resources:
-        gpu=1,
+        gpu=GPU_FIT,
     shell:
         """
         papermill {params.notebook} {output.executed_notebook} \
