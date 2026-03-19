@@ -1,9 +1,8 @@
 #!/usr/bin/env python
 """Generate index.html for GitHub Pages from exported notebook HTML files."""
 
+import argparse
 import os
-
-HTML_DIR = "results/html"
 
 SECTIONS = {
     "Simulation Validation": {
@@ -60,13 +59,13 @@ SECTIONS = {
 }
 
 
-def generate_html():
+def generate_html(html_dir):
     sections_html = ""
     for title, info in SECTIONS.items():
         existing_pages = [
             (path, label)
             for path, label in info["pages"]
-            if os.path.exists(os.path.join(HTML_DIR, path))
+            if os.path.exists(os.path.join(html_dir, path))
         ]
         if not existing_pages:
             continue
@@ -131,8 +130,17 @@ def generate_html():
 
 
 if __name__ == "__main__":
-    html = generate_html()
-    os.makedirs(HTML_DIR, exist_ok=True)
-    with open(f"{HTML_DIR}/index.html", "w") as f:
+    parser = argparse.ArgumentParser(description="Generate index.html for pipeline output")
+    parser.add_argument(
+        "--html-dir",
+        default="results/html",
+        help="Directory containing exported HTML notebooks (default: results/html)",
+    )
+    args = parser.parse_args()
+
+    html_dir = args.html_dir
+    html = generate_html(html_dir)
+    os.makedirs(html_dir, exist_ok=True)
+    with open(f"{html_dir}/index.html", "w") as f:
         f.write(html)
-    print(f"Generated {HTML_DIR}/index.html")
+    print(f"Generated {html_dir}/index.html")

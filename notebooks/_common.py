@@ -1,6 +1,7 @@
 """Shared utilities for pipeline notebooks."""
 
 import copy
+import os
 from functools import reduce
 
 import pandas as pd
@@ -26,10 +27,30 @@ def deep_merge(base, override):
     return result
 
 
-def load_config(config_path="config/config.yaml", profile=None):
-    """Load config.yaml with optional profile overrides.
+def _resolve_run_name(run_name):
+    """Resolve run_name from explicit value, env var, or symlink.
 
-    Designed as a papermill-friendly function: both parameters can be
+    Resolution chain:
+    1. Explicit ``run_name`` parameter (if truthy)
+    2. ``MULTIDMS_RUN`` environment variable
+    3. ``runs/current`` symlink target basename
+    4. None (no named run)
+    """
+    if run_name:
+        return run_name
+    env_val = os.environ.get("MULTIDMS_RUN", "")
+    if env_val:
+        return env_val
+    symlink = "runs/current"
+    if os.path.islink(symlink):
+        return os.path.basename(os.readlink(symlink))
+    return None
+
+
+def load_config(config_path="config/config.yaml", profile=None, run_name=None):
+    """Load config.yaml with optional profile overrides and named-run redirection.
+
+    Designed as a papermill-friendly function: all parameters can be
     injected directly into a notebook parameters cell.
 
     Parameters
@@ -39,6 +60,10 @@ def load_config(config_path="config/config.yaml", profile=None):
     profile : str or None
         Optional profile name (e.g. ``test``) which loads
         ``config/profile_{profile}.yaml`` and deep-merges it over the base.
+    run_name : str or None
+        Optional named run. When resolved (via explicit value, ``MULTIDMS_RUN``
+        env var, or ``runs/current`` symlink), output directories are rewritten
+        to ``runs/<name>/...``.
 
     Returns
     -------
@@ -54,6 +79,14 @@ def load_config(config_path="config/config.yaml", profile=None):
             overrides = yaml.safe_load(f)
         if overrides:
             config = deep_merge(config, overrides)
+
+    resolved = _resolve_run_name(run_name)
+    if resolved:
+        base = f"runs/{resolved}"
+        if "simulation" in config:
+            config["simulation"]["output_dir"] = f"{base}/simulation"
+        if "spike" in config:
+            config["spike"]["output_dir"] = f"{base}/spike_analysis"
 
     return config
 
