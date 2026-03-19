@@ -10,7 +10,8 @@ PROJECT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 # Load remote config (pass through any override args like host=orca03)
 eval "$(python3 "$SCRIPT_DIR/remote_config.py" "$@")"
 
-BRANCH="${branch:-main}"
+# Use the current local branch, not a config value
+BRANCH="$(cd "$PROJECT_DIR" && git rev-parse --abbrev-ref HEAD)"
 
 echo "==> Pushing local changes to origin/$BRANCH..."
 cd "$PROJECT_DIR"

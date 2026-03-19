@@ -17,7 +17,6 @@ CONFIG_PATH = os.path.expanduser("~/.config/spike-multidms/remote.yaml")
 
 REQUIRED_KEYS = ["host", "remote_dir"]
 DEFAULTS = {
-    "branch": "main",
     "pixi_env": "cuda",
 }
 
@@ -29,7 +28,6 @@ def load_remote_config(overrides=None):
 
         host: user@gpu-server
         remote_dir: /home/user/projects/SARS-CoV-2_spike_multidms
-        branch: main          # optional, default: main
         pixi_env: cuda        # optional, default: cuda
 
     Parameters
