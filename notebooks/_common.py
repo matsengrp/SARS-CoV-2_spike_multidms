@@ -245,3 +245,29 @@ def combine_replicate_muts(
         column_order += cols_to_combine + [f"avg_{c}"]
 
     return mut_df.loc[:, meta_cols + column_order]
+
+
+def robust_fit_models(params, gpu_ids=None, n_processes=1, **kwargs):
+    """Wrapper around multidms.model_collection.fit_models with GPU retry.
+
+    Multi-GPU parallel fitting can fail transiently (e.g., during first
+    JIT compilation). If the initial fit raises ModelCollectionFitError,
+    retry all fits sequentially on a single GPU.
+
+    Parameters are passed through to ``multidms.model_collection.fit_models``.
+    """
+    import multidms.model_collection
+
+    try:
+        return multidms.model_collection.fit_models(
+            params, gpu_ids=gpu_ids, n_processes=n_processes, **kwargs
+        )
+    except multidms.model_collection.ModelCollectionFitError as e:
+        single_gpu = gpu_ids[:1] if gpu_ids else None
+        print(
+            f"WARNING: {e} — retrying all fits sequentially"
+            f" on GPU {single_gpu}"
+        )
+        return multidms.model_collection.fit_models(
+            params, gpu_ids=single_gpu, n_processes=1, **kwargs
+        )
