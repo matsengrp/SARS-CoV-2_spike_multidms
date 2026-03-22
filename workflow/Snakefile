@@ -1,20 +1,12 @@
 """Main Snakefile for SARS-CoV-2 spike multidms analysis pipeline."""
 
-import copy
 import os
 import re
+import sys
 import yaml
 
-
-def deep_merge(base, override):
-    """Recursively merge override dict into base dict."""
-    result = copy.deepcopy(base)
-    for key, value in override.items():
-        if key in result and isinstance(result[key], dict) and isinstance(value, dict):
-            result[key] = deep_merge(result[key], value)
-        else:
-            result[key] = copy.deepcopy(value)
-    return result
+sys.path.insert(0, workflow.basedir + "/..")
+from notebooks._common import deep_merge
 
 
 configfile: "config/config.yaml"
@@ -25,7 +17,7 @@ configfile: "config/config.yaml"
 # profile overrides, so we snapshot them before merging the profile and
 # restore them after.
 _cli_keys = {"run_name", "profile", "gpu_ids", "pipelines"}
-_cli_overrides = {k: copy.deepcopy(config[k]) for k in _cli_keys if k in config}
+_cli_overrides = {k: config[k] for k in _cli_keys if k in config}
 
 profile = config.get("profile", "")
 if profile:

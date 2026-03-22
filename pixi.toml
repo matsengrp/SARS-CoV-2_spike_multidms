@@ -41,12 +41,12 @@ jax = { version = ">=0.4.29", extras = ["cuda12"] }
 
 [environments]
 default = { solve-group = "default" }
-cuda = { features = ["cuda"], solve-group = "default" }
+cuda = { features = ["cuda"], solve-group = "cuda" }
 
 [tasks]
 snakemake = "snakemake"
-test = "snakemake --configfile config/config.yaml --config profile=test -j4"
-production = "snakemake --configfile config/config.yaml -j8"
+test = "snakemake --configfile config/config.yaml --config profile=test -j4 --resources gpu=1"
+production = "snakemake --configfile config/config.yaml -j8 --resources gpu=1"
 remote-sync = "bash scripts/remote-sync.sh"
 remote-pipeline = "bash scripts/remote-pipeline.sh"
 remote-status = "bash scripts/remote-status.sh"

@@ -3,6 +3,7 @@
 
 rule supplemental_sim_figures:
     input:
+        config="config/config.yaml",
         muteffects=f"{SIM_OUT}/simulated_muteffects.csv",
         func_scores=f"{SIM_OUT}/simulated_func_scores.csv",
         model_vs_truth=f"{SIM_OUT}/model_vs_truth_beta_shift.csv",
@@ -16,18 +17,19 @@ rule supplemental_sim_figures:
         notebook="notebooks/supplemental/supplemental_sim_figures.ipynb",
         pm_args=PAPERMILL_ARGS,
         jax_env=JAX_ENV,
+    log:
+        "logs/supplemental_sim_figures.log",
     shell:
         """
-        {params.jax_env} papermill {params.notebook} {output.executed_notebook} \
-            {params.pm_args} && \
-        jupyter nbconvert --to html {output.executed_notebook} \
-            --output-dir $(dirname {output.html}) \
-            --output $(basename {output.html})
+        {params.jax_env} bash workflow/scripts/run_notebook.sh \
+            {params.notebook} {output.executed_notebook} {output.html} {log} \
+            {params.pm_args}
         """
 
 
 rule supplemental_structure:
     input:
+        config="config/config.yaml",
         mutations_df=f"{SPIKE_OUT}/mutations_df.csv",
         alignment="data/clustalo-I20230702-193723-0021-19090519-p1m.clustal_num",
     output:
@@ -38,11 +40,11 @@ rule supplemental_structure:
         notebook="notebooks/supplemental/supplemental_structure.ipynb",
         pm_args=PAPERMILL_ARGS,
         jax_env=JAX_ENV,
+    log:
+        "logs/supplemental_structure.log",
     shell:
         """
-        {params.jax_env} papermill {params.notebook} {output.executed_notebook} \
-            {params.pm_args} && \
-        jupyter nbconvert --to html {output.executed_notebook} \
-            --output-dir $(dirname {output.html}) \
-            --output $(basename {output.html})
+        {params.jax_env} bash workflow/scripts/run_notebook.sh \
+            {params.notebook} {output.executed_notebook} {output.html} {log} \
+            {params.pm_args}
         """

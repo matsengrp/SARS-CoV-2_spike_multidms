@@ -13,18 +13,19 @@ rule sim_01_data_simulation:
         notebook="notebooks/simulation/sim_01_data_simulation.ipynb",
         pm_args=PAPERMILL_ARGS,
         jax_env=JAX_ENV,
+    log:
+        "logs/sim_01_data_simulation.log",
     shell:
         """
-        {params.jax_env} papermill {params.notebook} {output.executed_notebook} \
-            {params.pm_args} && \
-        jupyter nbconvert --to html {output.executed_notebook} \
-            --output-dir $(dirname {output.html}) \
-            --output $(basename {output.html})
+        {params.jax_env} bash workflow/scripts/run_notebook.sh \
+            {params.notebook} {output.executed_notebook} {output.html} {log} \
+            {params.pm_args}
         """
 
 
 rule sim_02_model_fitting:
     input:
+        config="config/config.yaml",
         func_scores=f"{SIM_OUT}/simulated_func_scores.csv",
     output:
         fit_collection=f"{SIM_OUT}/fit_collection.pkl",
@@ -34,20 +35,21 @@ rule sim_02_model_fitting:
         notebook="notebooks/simulation/sim_02_model_fitting.ipynb",
         pm_args=PAPERMILL_ARGS,
         jax_env=JAX_ENV,
+    log:
+        "logs/sim_02_model_fitting.log",
     resources:
         gpu=GPU_FIT,
     shell:
         """
-        {params.jax_env} papermill {params.notebook} {output.executed_notebook} \
-            {params.pm_args} && \
-        jupyter nbconvert --to html {output.executed_notebook} \
-            --output-dir $(dirname {output.html}) \
-            --output $(basename {output.html})
+        {params.jax_env} bash workflow/scripts/run_notebook.sh \
+            {params.notebook} {output.executed_notebook} {output.html} {log} \
+            {params.pm_args}
         """
 
 
 rule sim_03_evaluation:
     input:
+        config="config/config.yaml",
         fit_collection=f"{SIM_OUT}/fit_collection.pkl",
         muteffects=f"{SIM_OUT}/simulated_muteffects.csv",
     output:
@@ -62,20 +64,21 @@ rule sim_03_evaluation:
         notebook="notebooks/simulation/sim_03_evaluation.ipynb",
         pm_args=PAPERMILL_ARGS,
         jax_env=JAX_ENV,
+    log:
+        "logs/sim_03_evaluation.log",
     resources:
         gpu=GPU_FIT,
     shell:
         """
-        {params.jax_env} papermill {params.notebook} {output.executed_notebook} \
-            {params.pm_args} && \
-        jupyter nbconvert --to html {output.executed_notebook} \
-            --output-dir $(dirname {output.html}) \
-            --output $(basename {output.html})
+        {params.jax_env} bash workflow/scripts/run_notebook.sh \
+            {params.notebook} {output.executed_notebook} {output.html} {log} \
+            {params.pm_args}
         """
 
 
 rule sim_04_visualization:
     input:
+        config="config/config.yaml",
         fit_collection=f"{SIM_OUT}/fit_collection.pkl",
         muteffects=f"{SIM_OUT}/simulated_muteffects.csv",
         model_vs_truth=f"{SIM_OUT}/model_vs_truth_beta_shift.csv",
@@ -90,11 +93,11 @@ rule sim_04_visualization:
         notebook="notebooks/simulation/sim_04_visualization.ipynb",
         pm_args=PAPERMILL_ARGS,
         jax_env=JAX_ENV,
+    log:
+        "logs/sim_04_visualization.log",
     shell:
         """
-        {params.jax_env} papermill {params.notebook} {output.executed_notebook} \
-            {params.pm_args} && \
-        jupyter nbconvert --to html {output.executed_notebook} \
-            --output-dir $(dirname {output.html}) \
-            --output $(basename {output.html})
+        {params.jax_env} bash workflow/scripts/run_notebook.sh \
+            {params.notebook} {output.executed_notebook} {output.html} {log} \
+            {params.pm_args}
         """

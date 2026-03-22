@@ -3,6 +3,7 @@
 
 rule spike_01_data_loading:
     input:
+        config="config/config.yaml",
         delta="data/Delta/functional_selections.csv",
         ba1="data/Omicron_BA1/functional_selections.csv",
         ba2="data/Omicron_BA2/functional_selections.csv",
@@ -14,18 +15,19 @@ rule spike_01_data_loading:
         notebook="notebooks/spike/spike_01_data_loading.ipynb",
         pm_args=PAPERMILL_ARGS,
         jax_env=JAX_ENV,
+    log:
+        "logs/spike_01_data_loading.log",
     shell:
         """
-        {params.jax_env} papermill {params.notebook} {output.executed_notebook} \
-            {params.pm_args} && \
-        jupyter nbconvert --to html {output.executed_notebook} \
-            --output-dir $(dirname {output.html}) \
-            --output $(basename {output.html})
+        {params.jax_env} bash workflow/scripts/run_notebook.sh \
+            {params.notebook} {output.executed_notebook} {output.html} {log} \
+            {params.pm_args}
         """
 
 
 rule spike_02_exploratory_stats:
     input:
+        config="config/config.yaml",
         func_scores=f"{SPIKE_OUT}/training_functional_scores.csv",
     output:
         replicate_corr=f"{SPIKE_OUT}/replicate_functional_score_correlation_scatter.pdf",
@@ -35,18 +37,19 @@ rule spike_02_exploratory_stats:
         notebook="notebooks/spike/spike_02_exploratory_stats.ipynb",
         pm_args=PAPERMILL_ARGS,
         jax_env=JAX_ENV,
+    log:
+        "logs/spike_02_exploratory_stats.log",
     shell:
         """
-        {params.jax_env} papermill {params.notebook} {output.executed_notebook} \
-            {params.pm_args} && \
-        jupyter nbconvert --to html {output.executed_notebook} \
-            --output-dir $(dirname {output.html}) \
-            --output $(basename {output.html})
+        {params.jax_env} bash workflow/scripts/run_notebook.sh \
+            {params.notebook} {output.executed_notebook} {output.html} {log} \
+            {params.pm_args}
         """
 
 
 rule spike_03_fit_models:
     input:
+        config="config/config.yaml",
         func_scores=f"{SPIKE_OUT}/training_functional_scores.csv",
     output:
         models=f"{SPIKE_OUT}/full_models.pkl",
@@ -56,20 +59,21 @@ rule spike_03_fit_models:
         notebook="notebooks/spike/spike_03_fit_models.ipynb",
         pm_args=PAPERMILL_ARGS,
         jax_env=JAX_ENV,
+    log:
+        "logs/spike_03_fit_models.log",
     resources:
         gpu=GPU_FIT,
     shell:
         """
-        {params.jax_env} papermill {params.notebook} {output.executed_notebook} \
-            {params.pm_args} && \
-        jupyter nbconvert --to html {output.executed_notebook} \
-            --output-dir $(dirname {output.html}) \
-            --output $(basename {output.html})
+        {params.jax_env} bash workflow/scripts/run_notebook.sh \
+            {params.notebook} {output.executed_notebook} {output.html} {log} \
+            {params.pm_args}
         """
 
 
 rule spike_04_model_evaluation:
     input:
+        config="config/config.yaml",
         models=f"{SPIKE_OUT}/full_models.pkl",
     output:
         mutations_df=f"{SPIKE_OUT}/mutations_df.csv",
@@ -79,18 +83,19 @@ rule spike_04_model_evaluation:
         notebook="notebooks/spike/spike_04_model_evaluation.ipynb",
         pm_args=PAPERMILL_ARGS,
         jax_env=JAX_ENV,
+    log:
+        "logs/spike_04_model_evaluation.log",
     shell:
         """
-        {params.jax_env} papermill {params.notebook} {output.executed_notebook} \
-            {params.pm_args} && \
-        jupyter nbconvert --to html {output.executed_notebook} \
-            --output-dir $(dirname {output.html}) \
-            --output $(basename {output.html})
+        {params.jax_env} bash workflow/scripts/run_notebook.sh \
+            {params.notebook} {output.executed_notebook} {output.html} {log} \
+            {params.pm_args}
         """
 
 
 rule spike_05_cross_validation:
     input:
+        config="config/config.yaml",
         func_scores=f"{SPIKE_OUT}/training_functional_scores.csv",
         models=f"{SPIKE_OUT}/full_models.pkl",
     output:
@@ -102,20 +107,21 @@ rule spike_05_cross_validation:
         notebook="notebooks/spike/spike_05_cross_validation.ipynb",
         pm_args=PAPERMILL_ARGS,
         jax_env=JAX_ENV,
+    log:
+        "logs/spike_05_cross_validation.log",
     resources:
         gpu=GPU_FIT,
     shell:
         """
-        {params.jax_env} papermill {params.notebook} {output.executed_notebook} \
-            {params.pm_args} && \
-        jupyter nbconvert --to html {output.executed_notebook} \
-            --output-dir $(dirname {output.html}) \
-            --output $(basename {output.html})
+        {params.jax_env} bash workflow/scripts/run_notebook.sh \
+            {params.notebook} {output.executed_notebook} {output.html} {log} \
+            {params.pm_args}
         """
 
 
 rule spike_06_global_epistasis:
     input:
+        config="config/config.yaml",
         models=f"{SPIKE_OUT}/full_models.pkl",
     output:
         ge_fig=f"{SPIKE_OUT}/global_epistasis_and_prediction_correlations.pdf",
@@ -125,20 +131,21 @@ rule spike_06_global_epistasis:
         notebook="notebooks/spike/spike_06_global_epistasis.ipynb",
         pm_args=PAPERMILL_ARGS,
         jax_env=JAX_ENV,
+    log:
+        "logs/spike_06_global_epistasis.log",
     resources:
         gpu=GPU_LOAD,
     shell:
         """
-        {params.jax_env} papermill {params.notebook} {output.executed_notebook} \
-            {params.pm_args} && \
-        jupyter nbconvert --to html {output.executed_notebook} \
-            --output-dir $(dirname {output.html}) \
-            --output $(basename {output.html})
+        {params.jax_env} bash workflow/scripts/run_notebook.sh \
+            {params.notebook} {output.executed_notebook} {output.html} {log} \
+            {params.pm_args}
         """
 
 
 rule spike_07_shifted_mutations:
     input:
+        config="config/config.yaml",
         models=f"{SPIKE_OUT}/full_models.pkl",
     output:
         interactive_chart=f"{SPIKE_OUT}/interactive_shift_chart.html",
@@ -149,20 +156,21 @@ rule spike_07_shifted_mutations:
         notebook="notebooks/spike/spike_07_shifted_mutations.ipynb",
         pm_args=PAPERMILL_ARGS,
         jax_env=JAX_ENV,
+    log:
+        "logs/spike_07_shifted_mutations.log",
     resources:
         gpu=GPU_LOAD,
     shell:
         """
-        {params.jax_env} papermill {params.notebook} {output.executed_notebook} \
-            {params.pm_args} && \
-        jupyter nbconvert --to html {output.executed_notebook} \
-            --output-dir $(dirname {output.html}) \
-            --output $(basename {output.html})
+        {params.jax_env} bash workflow/scripts/run_notebook.sh \
+            {params.notebook} {output.executed_notebook} {output.html} {log} \
+            {params.pm_args}
         """
 
 
 rule spike_08_naive_comparison:
     input:
+        config="config/config.yaml",
         func_scores=f"{SPIKE_OUT}/training_functional_scores.csv",
         models=f"{SPIKE_OUT}/full_models.pkl",
     output:
@@ -173,20 +181,21 @@ rule spike_08_naive_comparison:
         notebook="notebooks/spike/spike_08_naive_comparison.ipynb",
         pm_args=PAPERMILL_ARGS,
         jax_env=JAX_ENV,
+    log:
+        "logs/spike_08_naive_comparison.log",
     resources:
         gpu=GPU_FIT,
     shell:
         """
-        {params.jax_env} papermill {params.notebook} {output.executed_notebook} \
-            {params.pm_args} && \
-        jupyter nbconvert --to html {output.executed_notebook} \
-            --output-dir $(dirname {output.html}) \
-            --output $(basename {output.html})
+        {params.jax_env} bash workflow/scripts/run_notebook.sh \
+            {params.notebook} {output.executed_notebook} {output.html} {log} \
+            {params.pm_args}
         """
 
 
 rule spike_09_linear_comparison:
     input:
+        config="config/config.yaml",
         func_scores=f"{SPIKE_OUT}/training_functional_scores.csv",
         models=f"{SPIKE_OUT}/full_models.pkl",
     output:
@@ -197,20 +206,21 @@ rule spike_09_linear_comparison:
         notebook="notebooks/spike/spike_09_linear_comparison.ipynb",
         pm_args=PAPERMILL_ARGS,
         jax_env=JAX_ENV,
+    log:
+        "logs/spike_09_linear_comparison.log",
     resources:
         gpu=GPU_FIT,
     shell:
         """
-        {params.jax_env} papermill {params.notebook} {output.executed_notebook} \
-            {params.pm_args} && \
-        jupyter nbconvert --to html {output.executed_notebook} \
-            --output-dir $(dirname {output.html}) \
-            --output $(basename {output.html})
+        {params.jax_env} bash workflow/scripts/run_notebook.sh \
+            {params.notebook} {output.executed_notebook} {output.html} {log} \
+            {params.pm_args}
         """
 
 
 rule spike_10_validation:
     input:
+        config="config/config.yaml",
         models=f"{SPIKE_OUT}/full_models.pkl",
         titers="data/viral_titers.csv",
         validation="data/spike_validation_data.csv",
@@ -222,20 +232,21 @@ rule spike_10_validation:
         notebook="notebooks/spike/spike_10_validation.ipynb",
         pm_args=PAPERMILL_ARGS,
         jax_env=JAX_ENV,
+    log:
+        "logs/spike_10_validation.log",
     resources:
         gpu=GPU_LOAD,
     shell:
         """
-        {params.jax_env} papermill {params.notebook} {output.executed_notebook} \
-            {params.pm_args} && \
-        jupyter nbconvert --to html {output.executed_notebook} \
-            --output-dir $(dirname {output.html}) \
-            --output $(basename {output.html})
+        {params.jax_env} bash workflow/scripts/run_notebook.sh \
+            {params.notebook} {output.executed_notebook} {output.html} {log} \
+            {params.pm_args}
         """
 
 
 rule spike_11_reference_sensitivity:
     input:
+        config="config/config.yaml",
         func_scores=f"{SPIKE_OUT}/training_functional_scores.csv",
     output:
         ref_comparison=f"{SPIKE_OUT}/reference_model_comparison_params_scatter.pdf",
@@ -245,20 +256,21 @@ rule spike_11_reference_sensitivity:
         notebook="notebooks/spike/spike_11_reference_sensitivity.ipynb",
         pm_args=PAPERMILL_ARGS,
         jax_env=JAX_ENV,
+    log:
+        "logs/spike_11_reference_sensitivity.log",
     resources:
         gpu=GPU_FIT,
     shell:
         """
-        {params.jax_env} papermill {params.notebook} {output.executed_notebook} \
-            {params.pm_args} && \
-        jupyter nbconvert --to html {output.executed_notebook} \
-            --output-dir $(dirname {output.html}) \
-            --output $(basename {output.html})
+        {params.jax_env} bash workflow/scripts/run_notebook.sh \
+            {params.notebook} {output.executed_notebook} {output.html} {log} \
+            {params.pm_args}
         """
 
 
 rule spike_12_sparsity_correlation:
     input:
+        config="config/config.yaml",
         models=f"{SPIKE_OUT}/full_models.pkl",
         mutations_df=f"{SPIKE_OUT}/mutations_df.csv",
     output:
@@ -270,11 +282,11 @@ rule spike_12_sparsity_correlation:
         notebook="notebooks/spike/spike_12_sparsity_correlation.ipynb",
         pm_args=PAPERMILL_ARGS,
         jax_env=JAX_ENV,
+    log:
+        "logs/spike_12_sparsity_correlation.log",
     shell:
         """
-        {params.jax_env} papermill {params.notebook} {output.executed_notebook} \
-            {params.pm_args} && \
-        jupyter nbconvert --to html {output.executed_notebook} \
-            --output-dir $(dirname {output.html}) \
-            --output $(basename {output.html})
+        {params.jax_env} bash workflow/scripts/run_notebook.sh \
+            {params.notebook} {output.executed_notebook} {output.html} {log} \
+            {params.pm_args}
         """

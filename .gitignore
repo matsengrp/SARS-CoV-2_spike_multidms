@@ -19,7 +19,7 @@ runs/
 
 # Snakemake
 .snakemake/
+logs/
 
 # Pixi
 .pixi/
-pixi.lock
