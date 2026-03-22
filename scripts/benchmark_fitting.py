@@ -262,7 +262,7 @@ def run_throughput_benchmark(
         "n_total": n_total,
         "n_fit": n_fit,
         "n_failed": n_failed,
-        "retried": retried if 'retried' in dir() else False,
+        "retried": retried,
         "jit_warmup_s": jit_time,
         "wall_time_s": wall_time,
         "time_per_fit_s": round(wall_time / max(n_fit, 1), 1),
@@ -855,11 +855,24 @@ def main():
         type=int, default=1,
         help="Number of repeat trials per config (default: 1, experiment 2 defaults to 10)",
     )
+    parser.add_argument(
+        "--maxiter", "-m",
+        type=int, default=10,
+        help="Max fitting iterations (default: 10 — sufficient for profiling, "
+             "use 75+ only if you need converged results)",
+    )
     args = parser.parse_args()
 
     experiments = [int(x.strip()) for x in args.experiments.split(",")]
 
-    logger.info("Benchmark starting: experiments=%s, repeats=%d", experiments, args.repeats)
+    # Override default maxiter for all experiments
+    DEFAULT_FIT_CFG_SPIKE["maxiter"] = args.maxiter
+    DEFAULT_FIT_CFG_SIM["maxiter"] = args.maxiter
+
+    logger.info(
+        "Benchmark starting: experiments=%s, repeats=%d, maxiter=%d",
+        experiments, args.repeats, args.maxiter,
+    )
     logger.info("Platform: %s, Python: %s", platform.platform(), sys.version.split()[0])
 
     # Check data availability
