@@ -1,6 +1,7 @@
 """Shared utilities for pipeline notebooks."""
 
 import copy
+import os
 from functools import reduce
 
 import pandas as pd
@@ -26,10 +27,30 @@ def deep_merge(base, override):
     return result
 
 
-def load_config(config_path="config/config.yaml", profile=None):
-    """Load config.yaml with optional profile overrides.
+def _resolve_run_name(run_name):
+    """Resolve run_name from explicit value, env var, or symlink.
 
-    Designed as a papermill-friendly function: both parameters can be
+    Resolution chain:
+    1. Explicit ``run_name`` parameter (if truthy)
+    2. ``MULTIDMS_RUN`` environment variable
+    3. ``runs/current`` symlink target basename
+    4. None (no named run)
+    """
+    if run_name:
+        return run_name
+    env_val = os.environ.get("MULTIDMS_RUN", "")
+    if env_val:
+        return env_val
+    symlink = "runs/current"
+    if os.path.islink(symlink):
+        return os.path.basename(os.readlink(symlink))
+    return None
+
+
+def load_config(config_path="config/config.yaml", profile=None, run_name=None):
+    """Load config.yaml with optional profile overrides and named-run redirection.
+
+    Designed as a papermill-friendly function: all parameters can be
     injected directly into a notebook parameters cell.
 
     Parameters
@@ -39,6 +60,10 @@ def load_config(config_path="config/config.yaml", profile=None):
     profile : str or None
         Optional profile name (e.g. ``test``) which loads
         ``config/profile_{profile}.yaml`` and deep-merges it over the base.
+    run_name : str or None
+        Optional named run. When resolved (via explicit value, ``MULTIDMS_RUN``
+        env var, or ``runs/current`` symlink), output directories are rewritten
+        to ``runs/<name>/...``.
 
     Returns
     -------
@@ -54,6 +79,14 @@ def load_config(config_path="config/config.yaml", profile=None):
             overrides = yaml.safe_load(f)
         if overrides:
             config = deep_merge(config, overrides)
+
+    resolved = _resolve_run_name(run_name)
+    if resolved:
+        base = f"runs/{resolved}"
+        if "simulation" in config:
+            config["simulation"]["output_dir"] = f"{base}/simulation"
+        if "spike" in config:
+            config["spike"]["output_dir"] = f"{base}/spike_analysis"
 
     return config
 
@@ -316,19 +349,24 @@ def combine_replicate_muts(
     """
     mutations_dfs = []
     for replicate, fit in fit_dict.items():
-        fit_mut_df = fit.get_mutations_df(**kwargs)
+        fit_mut_df = fit.get_mutations_df(**kwargs).reset_index()
+        # Ensure 'mutation' column exists for merging
+        if "mutation" not in fit_mut_df.columns and fit_mut_df.index.name == "mutation":
+            fit_mut_df = fit_mut_df.reset_index()
         fit_mut_df = fit_mut_df.drop(
             [c for c in fit_mut_df.columns if "times_seen" in c], axis=1
         )
         new_column_name_map = {
-            c: f"{replicate}_{c}" for c in fit_mut_df.columns
+            c: f"{replicate}_{c}"
+            for c in fit_mut_df.columns
+            if c != "mutation"
         }
         fit_mut_df = fit_mut_df.rename(new_column_name_map, axis=1)
         mutations_dfs.append(fit_mut_df)
 
     mut_df = reduce(
         lambda left, right: pd.merge(
-            left, right, left_index=True, right_index=True, how=how
+            left, right, on="mutation", how=how
         ),
         mutations_dfs,
     )
@@ -339,7 +377,7 @@ def combine_replicate_muts(
         ref_df = fit.get_mutations_df(**kwargs)
         all_cols.update(c for c in ref_df.columns if "times_seen" not in c)
 
-    meta_cols = ["wts", "sites", "muts"]
+    meta_cols = ["mutation", "wts", "sites", "muts"]
     param_cols = sorted(
         c for c in all_cols if c not in meta_cols and c != "mutation"
     )
@@ -377,3 +415,29 @@ def combine_replicate_muts(
         column_order += cols_to_combine + [f"avg_{c}"]
 
     return mut_df.loc[:, meta_cols + column_order]
+
+
+def robust_fit_models(params, gpu_ids=None, n_processes=1, **kwargs):
+    """Wrapper around multidms.model_collection.fit_models with GPU retry.
+
+    Multi-GPU parallel fitting can fail transiently (e.g., during first
+    JIT compilation). If the initial fit raises ModelCollectionFitError,
+    retry all fits sequentially on a single GPU.
+
+    Parameters are passed through to ``multidms.model_collection.fit_models``.
+    """
+    import multidms.model_collection
+
+    try:
+        return multidms.model_collection.fit_models(
+            params, gpu_ids=gpu_ids, n_processes=n_processes, **kwargs
+        )
+    except multidms.model_collection.ModelCollectionFitError as e:
+        single_gpu = gpu_ids[:1] if gpu_ids else None
+        print(
+            f"WARNING: {e} — retrying all fits sequentially"
+            f" on GPU {single_gpu}"
+        )
+        return multidms.model_collection.fit_models(
+            params, gpu_ids=single_gpu, n_processes=1, **kwargs
+        )

@@ -1,15 +1,8 @@
 #!/usr/bin/env python
 """Generate index.html for GitHub Pages from exported notebook HTML files."""
 
+import argparse
 import os
-
-# When run via Snakemake script: directive, use snakemake.output;
-# otherwise fall back to default for standalone use.
-try:
-    _output_path = snakemake.output[0]  # noqa: F821
-    HTML_DIR = os.path.dirname(_output_path)
-except NameError:
-    HTML_DIR = "results/html"
 
 SECTIONS = {
     "Simulation Validation": {
@@ -66,13 +59,13 @@ SECTIONS = {
 }
 
 
-def generate_html():
+def generate_html(html_dir):
     sections_html = ""
     for title, info in SECTIONS.items():
         existing_pages = [
             (path, label)
             for path, label in info["pages"]
-            if os.path.exists(os.path.join(HTML_DIR, path))
+            if os.path.exists(os.path.join(html_dir, path))
         ]
         if not existing_pages:
             continue
@@ -136,19 +129,18 @@ def generate_html():
 """
 
 
-def main():
-    html = generate_html()
-    os.makedirs(HTML_DIR, exist_ok=True)
-    output_file = os.path.join(HTML_DIR, "index.html")
-    with open(output_file, "w") as f:
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Generate index.html for pipeline output")
+    parser.add_argument(
+        "--html-dir",
+        default="results/html",
+        help="Directory containing exported HTML notebooks (default: results/html)",
+    )
+    args = parser.parse_args()
+
+    html_dir = args.html_dir
+    html = generate_html(html_dir)
+    os.makedirs(html_dir, exist_ok=True)
+    with open(f"{html_dir}/index.html", "w") as f:
         f.write(html)
-    print(f"Generated {output_file}")
-
-
-# Run when invoked via Snakemake script: directive or standalone
-try:
-    snakemake  # noqa: F821
-    main()
-except NameError:
-    if __name__ == "__main__":
-        main()
+    print(f"Generated {html_dir}/index.html")

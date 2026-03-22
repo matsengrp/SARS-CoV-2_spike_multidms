@@ -21,8 +21,9 @@ simulation:
 
 spike:
   subsample_frac: 0.01                        # PRODUCTION: null (no subsampling)
+  chosen_lasso_strength: 4.0                  # PRODUCTION: 4.0 (must be in fusionreg_values)
   fitting:
-    maxiter: 2                                # PRODUCTION: 30
-    fusionreg_values: [4.0e-5]               # PRODUCTION: [0.0, 5.0e-6, ... 6.4e-4]
+    maxiter: 2                                # PRODUCTION: 75
+    fusionreg_values: [0.0, 4.0]             # PRODUCTION: [0.0, 2.0, 4.0, 8.0]
     ge_kwargs: {tol: 1.0e-5, maxiter: 5, maxls: 5, jit: true, verbose: false}
     cal_kwargs: {tol: 1.0e-4, maxiter: 5, maxls: 5, jit: true, verbose: false}

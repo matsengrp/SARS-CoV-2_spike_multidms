@@ -1,5 +1,7 @@
 """Main Snakefile for SARS-CoV-2 spike multidms analysis pipeline."""
 
+import os
+import re
 import sys
 import yaml
 
@@ -10,13 +12,46 @@ from notebooks._common import deep_merge
 configfile: "config/config.yaml"
 
 
-# Load profile overrides if specified
+# Load profile overrides if specified.
+# CLI --config values (run_name, gpu_ids, etc.) must take priority over
+# profile overrides, so we snapshot them before merging the profile and
+# restore them after.
+_cli_keys = {"run_name", "profile", "gpu_ids", "pipelines"}
+_cli_overrides = {k: config[k] for k in _cli_keys if k in config}
+
 profile = config.get("profile", "")
 if profile:
     with open(f"config/profile_{profile}.yaml") as f:
         overrides = yaml.safe_load(f)
         if overrides:
             config = deep_merge(config, overrides)
+
+# Restore CLI overrides so they win over profile defaults
+config.update(_cli_overrides)
+
+
+# ---------------------------------------------------------------------------
+# Named-run output redirection
+# ---------------------------------------------------------------------------
+run_name = config.get("run_name", "")
+if run_name:
+    if not re.fullmatch(r"[a-zA-Z0-9_-]+", run_name):
+        raise ValueError(
+            f"run_name must match [a-zA-Z0-9_-]+, got: '{run_name}'"
+        )
+    RESULTS_BASE = f"runs/{run_name}"
+else:
+    RESULTS_BASE = "results"
+
+SIM_OUT = f"{RESULTS_BASE}/simulation"
+SPIKE_OUT = f"{RESULTS_BASE}/spike_analysis"
+SUP_OUT = f"{RESULTS_BASE}/supplemental"
+HTML_BASE = f"{RESULTS_BASE}/html"
+
+# Rewrite output_dir in config so notebooks pick up the right paths
+if run_name:
+    config["simulation"]["output_dir"] = SIM_OUT
+    config["spike"]["output_dir"] = SPIKE_OUT
 
 
 # Build papermill CLI args for notebooks
@@ -25,10 +60,46 @@ def papermill_args(config_path="config/config.yaml"):
     args = f"-p config_path {config_path}"
     if profile:
         args += f" -p profile {profile}"
+    if run_name:
+        args += f" -p run_name {run_name}"
     return args
 
 
 PAPERMILL_ARGS = papermill_args()
+
+# JAX environment: disable memory pre-allocation so multiple notebook processes
+# can share GPUs without OOM, and set visible devices from config.
+_jax_env_parts = ["XLA_PYTHON_CLIENT_PREALLOCATE=false"]
+# (CUDA_VISIBLE_DEVICES is set after gpu_ids parsing below)
+
+
+# ---------------------------------------------------------------------------
+# GPU resource scheduling
+# ---------------------------------------------------------------------------
+# gpu_ids from config controls which physical GPUs fit_models uses.
+# N_GPUS tells Snakemake how many GPU "slots" are available for scheduling.
+# - Fitting notebooks claim ALL GPUs (gpu=N_GPUS) since fit_models round-robins
+#   across all gpu_ids.
+# - Analysis notebooks that just load a model claim 1 GPU (gpu=GPU_LOAD).
+# Pass --resources gpu=N_GPUS on the command line to enforce the constraint.
+# gpu_ids can be: a YAML list [0,1,2,3], a comma-separated CLI string "0,1,2,3",
+# or null/None for CPU-only mode.
+_raw_gpu_ids = config.get("gpu_ids")
+if isinstance(_raw_gpu_ids, str):
+    _gpu_ids = [int(x) for x in _raw_gpu_ids.split(",") if x.strip()]
+elif isinstance(_raw_gpu_ids, list):
+    _gpu_ids = [int(x) for x in _raw_gpu_ids]
+else:
+    _gpu_ids = []
+config["gpu_ids"] = _gpu_ids or None  # normalize back for notebooks
+N_GPUS = len(_gpu_ids)
+GPU_FIT = max(N_GPUS, 1)   # fitting notebooks: claim all GPUs (min 1 for CPU fallback)
+GPU_LOAD = 1                # analysis notebooks: claim 1 GPU for inference
+
+# Finish building JAX env prefix for shell commands
+if _gpu_ids:
+    _jax_env_parts.append(f"CUDA_VISIBLE_DEVICES={','.join(str(g) for g in _gpu_ids)}")
+JAX_ENV = " ".join(_jax_env_parts)
 
 # Determine which pipelines to run
 PIPELINES = config.get("pipelines", ["simulation", "spike"])
@@ -38,39 +109,58 @@ SPIKE_HTMLS = []
 
 if "simulation" in PIPELINES:
     SIM_HTMLS = [
-        "results/html/simulation/sim_01_data_simulation.html",
-        "results/html/simulation/sim_02_model_fitting.html",
-        "results/html/simulation/sim_03_evaluation.html",
-        "results/html/simulation/sim_04_visualization.html",
-        "results/html/supplemental/supplemental_sim_figures.html",
+        f"{HTML_BASE}/simulation/sim_01_data_simulation.html",
+        f"{HTML_BASE}/simulation/sim_02_model_fitting.html",
+        f"{HTML_BASE}/simulation/sim_03_evaluation.html",
+        f"{HTML_BASE}/simulation/sim_04_visualization.html",
+        f"{HTML_BASE}/supplemental/supplemental_sim_figures.html",
     ]
 
 if "spike" in PIPELINES:
     SPIKE_HTMLS = [
-        "results/html/spike/spike_01_data_loading.html",
-        "results/html/spike/spike_02_exploratory_stats.html",
-        "results/html/spike/spike_03_fit_models.html",
-        "results/html/spike/spike_04_model_evaluation.html",
-        "results/html/spike/spike_05_cross_validation.html",
-        "results/html/spike/spike_06_global_epistasis.html",
-        "results/html/spike/spike_07_shifted_mutations.html",
-        "results/html/spike/spike_08_naive_comparison.html",
-        "results/html/spike/spike_09_linear_comparison.html",
-        "results/html/spike/spike_10_validation.html",
-        "results/html/spike/spike_11_reference_sensitivity.html",
-        "results/html/spike/spike_12_sparsity_correlation.html",
-        "results/html/supplemental/supplemental_structure.html",
+        f"{HTML_BASE}/spike/spike_01_data_loading.html",
+        f"{HTML_BASE}/spike/spike_02_exploratory_stats.html",
+        f"{HTML_BASE}/spike/spike_03_fit_models.html",
+        f"{HTML_BASE}/spike/spike_04_model_evaluation.html",
+        f"{HTML_BASE}/spike/spike_05_cross_validation.html",
+        f"{HTML_BASE}/spike/spike_06_global_epistasis.html",
+        f"{HTML_BASE}/spike/spike_07_shifted_mutations.html",
+        f"{HTML_BASE}/spike/spike_08_naive_comparison.html",
+        f"{HTML_BASE}/spike/spike_09_linear_comparison.html",
+        f"{HTML_BASE}/spike/spike_10_validation.html",
+        f"{HTML_BASE}/spike/spike_11_reference_sensitivity.html",
+        f"{HTML_BASE}/spike/spike_12_sparsity_correlation.html",
+        f"{HTML_BASE}/supplemental/supplemental_structure.html",
     ]
 
 ALL_HTMLS = SIM_HTMLS + SPIKE_HTMLS
-
-
-rule all:
-    input:
-        "results/html/index.html",
 
 
 include: "rules/simulation.smk"
 include: "rules/spike.smk"
 include: "rules/supplemental.smk"
 include: "rules/pages.smk"
+
+
+rule all:
+    input:
+        f"{HTML_BASE}/index.html",
+
+
+onstart:
+    if run_name:
+        import datetime, json, subprocess
+        meta_dir = f"runs/{run_name}"
+        os.makedirs(meta_dir, exist_ok=True)
+        git_sha = subprocess.check_output(
+            ["git", "rev-parse", "HEAD"], text=True
+        ).strip()
+        meta = {
+            "run_name": run_name,
+            "started": datetime.datetime.now().isoformat(),
+            "git_sha": git_sha,
+            "profile": profile or None,
+            "config": dict(config),
+        }
+        with open(f"{meta_dir}/_meta.yaml", "w") as fh:
+            yaml.dump(meta, fh, default_flow_style=False)

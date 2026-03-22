@@ -5,8 +5,13 @@ rule generate_index:
     input:
         ALL_HTMLS,
     output:
-        "results/html/index.html",
+        f"{HTML_BASE}/index.html",
+    params:
+        script="workflow/scripts/generate_index.py",
+        html_dir=HTML_BASE,
     log:
         "logs/generate_index.log",
-    script:
-        "../scripts/generate_index.py"
+    shell:
+        """
+        python {params.script} --html-dir {params.html_dir} 2>&1 | tee {log}
+        """
