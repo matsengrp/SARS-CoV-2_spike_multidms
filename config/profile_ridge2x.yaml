@@ -1,0 +1,6 @@
+# Profile: double beta0_ridge experiment
+# Simulation: 1.0e-5 -> 2.0e-5
+# Spike: 0 -> 0 (2x0=0, no change)
+simulation:
+  fitting:
+    beta0_ridge: 2.0e-5
