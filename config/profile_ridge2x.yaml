@@ -7,7 +7,6 @@ n_processes: 48
 simulation:
   fitting:
     beta0_ridge: 2.0e-5
-    l2reg: 1.0e-3
 
 spike:
   fitting:
