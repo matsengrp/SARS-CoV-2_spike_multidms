@@ -8,9 +8,11 @@
 
 ## Executive Summary
 
-**GPU provides no per-fit speedup over CPU.** A single GPU fit takes the same time as a single CPU fit (~55s for spike data). The only GPU advantage is **multi-GPU parallelism** (4 GPUs ≈ 3x speedup), but this is matched by CPU multiprocessing (`n_processes=4` achieves 2.3x, `n_processes=8` achieves 2.7x). Meanwhile, multi-GPU fitting has a **100% failure rate** without JIT warmup due to a data race in `multidms`.
+**GPU provides no per-fit speedup over CPU.** A single GPU fit takes the same time as a single CPU fit (~55s for spike data). The only GPU advantage is **multi-GPU parallelism** (4 GPUs ≈ 3x speedup), but this is closely matched by CPU multiprocessing (`n_processes=4` achieves 2.3x, `n_processes=8` achieves 2.7x).
 
-**Recommendation**: Use **CPU multiprocessing** (`n_processes=4-8`, `gpu_ids=None`) for all production fitting. Drop GPU complexity from the pipeline.
+Multi-GPU fitting has a **cold-start data race** in `jaxmodels.Data.from_multidms()` that causes 100% failure without a JIT warmup. With warmup (as `robust_fit_models` effectively provides), gpu-4 is reliable (0/24 failures) and the fastest config (128s vs 161s for cpu-8). However, GPU provides no *per-fit* advantage — it is only faster because 4 GPUs run 4 fits in parallel, the same thing CPU multiprocessing achieves without GPU complexity.
+
+**Recommendation**: Use **CPU multiprocessing** (`n_processes=4-8`, `gpu_ids=None`) for production fitting. This is simpler, nearly as fast, more portable, and avoids the cold-start data race entirely. If multi-GPU is kept, the `robust_fit_models` warmup pattern is essential.
 
 ---
 
@@ -44,16 +46,18 @@
 | Failure rate (no warmup) | **100% (80/80 fits)** |
 | Failure rate (with warmup, from Exp. 1) | **0% (0/24 fits)** |
 
-**Root cause identified**: A **thread-safety data race** in `jaxmodels.Data.from_multidms()` (line 69 of `jaxmodels.py`). When multiple threads simultaneously construct `scipy.sparse.csr_array` from the same shared `Data` object, the COO→CSR conversion produces corrupted index arrays:
+**Root cause identified**: A **cold-start data race** in `jaxmodels.Data.from_multidms()` (line 69 of `jaxmodels.py`). When multiple threads simultaneously access JAX BCOO arrays from a shared `Data` object *for the first time*, the COO→CSR conversion in `scipy.sparse.csr_array` produces corrupted index arrays:
 
 ```
 ValueError: axis 0 index 174049 exceeds matrix dimension 27191
 ValueError: axis 0 index 606085664 exceeds matrix dimension 27191
 ```
 
-The wildly wrong indices (174049 and 606085664 for a 27191-dim matrix) are hallmarks of memory corruption from concurrent access to shared NumPy/SciPy data structures.
+The corrupted indices (174049 and 606085664 for a 27191-dim matrix) suggest memory corruption during concurrent access to lazily-initialized JAX BCOO array internals (`X.data`, `X.indices`).
 
-**Why warmup prevents failures**: After a JIT warmup fit, the compiled XLA programs are cached in-process. Subsequent fits reuse the cached JIT artifacts, reducing contention during the Model.fit() → jaxmodels.Data.from_multidms() path. However, this is fragile — it depends on the warmup creating the same computation graph that subsequent fits will use.
+**Why warmup prevents failures**: A single-fit warmup materializes the BCOO array buffers in `multidms_data.arrays["X"]` before concurrent access begins. Once the internal arrays are realized (not lazily computed), concurrent reads are safe. This explains why Experiment 1 (which includes a warmup) saw 0% failures while Experiment 2 (no warmup) saw 100%.
+
+**Note**: This cold-start race is distinct from the production failures observed pre-merge, which were intermittent (6/8 fits failed, not 100%) and occurred during fitting, not sparse matrix construction. The pre-merge failures may have involved JIT compilation races or numerical divergence under concurrent GPU access. The `robust_fit_models` retry pattern handles both failure modes.
 
 ## Experiment 3: JIT Compilation Overhead
 
@@ -104,8 +108,8 @@ The extremely small memory footprint (12 MB per fit) means memory is not a const
 |----------|----------|----------|
 | GPU is 3x+ faster than CPU | **NO** — gpu-1 = cpu-1 | ~~Invest in multi-GPU~~ |
 | GPU ≈ CPU | **YES** — 55.0 vs 54.8 s/fit | **Drop GPU, use n_processes** |
-| Multi-GPU is reliable | **NO** — 100% failure without warmup | ~~Use gpu-4 directly~~ |
-| Multi-GPU is fragile | **YES** — data race in shared Data objects | **Use CPU multiprocessing** |
+| Multi-GPU is reliable | **YES with warmup** (0/24), **NO without** (80/80) | Warmup is essential; `robust_fit_models` provides this |
+| Multi-GPU is fragile | **Cold-start only** — BCOO lazy init race | Warmup mitigates; CPU avoids entirely |
 | JIT overhead dominates | **NO** — 22% overhead, not dominant | Low priority |
 | Small datasets benefit from GPU | **NO** — GPU slower for small data | Use CPU for all sizes |
 
@@ -128,10 +132,10 @@ n_processes: 4       # Use 4 CPU processes (match available cores)
 
 ### `multidms` library bugs to file
 
-1. **Thread-safety data race** in `_fit_models_gpu` / `jaxmodels.Data.from_multidms()`: Concurrent threads corrupt sparse matrix indices when constructing CSR arrays from shared `Data` objects. Fix options:
+1. **Cold-start data race** in `_fit_models_gpu` / `jaxmodels.Data.from_multidms()`: Concurrent threads corrupt sparse matrix indices when accessing lazily-initialized JAX BCOO arrays for the first time. Fix options:
+   - Materialize BCOO arrays in main thread before spawning workers (e.g., access `.data` and `.indices` once per dataset)
    - Deep-copy `Data` per thread before `fit_one_model()`
-   - Use `multiprocessing.Process` instead of `ThreadPoolExecutor` for GPU fits
-   - Pre-construct JAX data arrays in the main thread and pass them to workers
+   - Add a single-fit warmup inside `_fit_models_gpu` before the ThreadPoolExecutor loop
 2. **Silent exception swallowing** in `_fit_models_gpu` (line 238) and `_fit_fun` (line 165): Replace `except Exception: result = None` with `logger.exception()` + `result = None`.
 3. **`stack_fit_models` crash on None**: Filter None values before `pd.concat`.
 
