@@ -1,13 +1,15 @@
-# Profile: double beta0_ridge experiment, CPU-only
-# Simulation: 1.0e-5 -> 2.0e-5
-# Spike: 0 -> 2.0e-5 (matching simulation's doubled value)
+# Profile: ridge regularization experiment, CPU-only
+# beta0_ridge: sim 1.0e-5 -> 2.0e-5, spike 0 -> 2.0e-5
+# l2reg: both 1.0e-4 -> 1.0e-3 (10x increase)
 gpu_ids: null
 n_processes: 48
 
 simulation:
   fitting:
     beta0_ridge: 2.0e-5
+    l2reg: 1.0e-3
 
 spike:
   fitting:
     beta0_ridge: 2.0e-5
+    l2reg: 1.0e-3
