@@ -1,6 +1,9 @@
-# Profile: double beta0_ridge experiment
+# Profile: double beta0_ridge experiment, CPU-only
 # Simulation: 1.0e-5 -> 2.0e-5
 # Spike: 0 -> 0 (2x0=0, no change)
+gpu_ids: null
+n_processes: 48
+
 simulation:
   fitting:
     beta0_ridge: 2.0e-5
