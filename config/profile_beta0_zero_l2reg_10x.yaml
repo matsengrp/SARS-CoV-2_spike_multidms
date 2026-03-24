@@ -1,0 +1,9 @@
+# Profile: Zero beta0 init + 10X l2reg (spike only)
+pipelines: [spike]
+gpu_ids: null
+n_processes: 48
+
+spike:
+  fitting:
+    beta0_init: {Omicron_BA1: 0.0, Delta: 0.0, Omicron_BA2: 0.0}
+    l2reg: 1.0e-2

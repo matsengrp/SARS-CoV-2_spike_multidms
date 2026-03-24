@@ -1,0 +1,9 @@
+# Profile: 10X l2reg to 1e-2 (spike only)
+# Base: l2reg=1.0e-4
+pipelines: [spike]
+gpu_ids: null
+n_processes: 48
+
+spike:
+  fitting:
+    l2reg: 1.0e-2
