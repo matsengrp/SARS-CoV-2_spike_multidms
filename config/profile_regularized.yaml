@@ -1,0 +1,15 @@
+# Profile: regularized experiment (spike only)
+# - beta0_init: all zeros
+# - alpha_init: all ones
+# - beta0_ridge: 1.0e-3 (reasonable ridge on intercepts)
+# - l2reg: 1.0e-2 (100x base)
+pipelines: [spike]
+gpu_ids: null
+n_processes: 48
+
+spike:
+  fitting:
+    beta0_init: {Omicron_BA1: 0.0, Delta: 0.0, Omicron_BA2: 0.0}
+    alpha_init: {Omicron_BA1: 1.0, Delta: 1.0, Omicron_BA2: 1.0}
+    beta0_ridge: 1.0e-3
+    l2reg: 1.0e-2
