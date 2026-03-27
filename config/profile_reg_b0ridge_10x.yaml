@@ -1,0 +1,17 @@
+# Profile: regularized + 10x stronger beta0_ridge (idea #1)
+# Tests whether stronger β0 ridge penalty stabilizes wildtype position
+# across replicates, improving shift correlation.
+# β0_ridge penalizes (β0_cond - β0_ref)^2, so increasing it pulls
+# all conditions' intercepts toward the reference, reducing φ_wt drift.
+# Extends profile_regularized: keeps l2reg=1e-2, alpha_init=1,
+# beta0_init=0, but increases beta0_ridge from 1e-3 to 1e-2.
+pipelines: [spike]
+gpu_ids: null
+n_processes: 48
+
+spike:
+  fitting:
+    beta0_init: {Omicron_BA1: 0.0, Delta: 0.0, Omicron_BA2: 0.0}
+    alpha_init: {Omicron_BA1: 1.0, Delta: 1.0, Omicron_BA2: 1.0}
+    beta0_ridge: 1.0e-2
+    l2reg: 1.0e-2

@@ -1,0 +1,17 @@
+# Profile: regularized + all stabilization ideas combined (#1+#2+#3)
+# Combines the three individual interventions:
+#   - alpha_init=6.0 (closer to converged values)
+#   - warmstart=true (Ridge regression init for beta)
+#   - beta0_ridge=1e-2 (10x stronger intercept regularization)
+# If this outperforms the individual experiments, the effects are additive.
+# If not, we can identify which intervention matters most from the singles.
+pipelines: [spike]
+gpu_ids: null
+n_processes: 48
+
+spike:
+  fitting:
+    alpha_init: {Omicron_BA1: 6.0, Delta: 6.0, Omicron_BA2: 6.0}
+    beta0_ridge: 1.0e-2
+    l2reg: 1.0e-2
+    warmstart: true

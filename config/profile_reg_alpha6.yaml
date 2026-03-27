@@ -1,0 +1,15 @@
+# Profile: regularized + alpha_init=6.0 (idea #3)
+# Tests whether starting alpha closer to converged values improves
+# replicate shift correlation by reducing optimizer sensitivity.
+# Extends profile_regularized: keeps l2reg=1e-2, beta0_ridge=1e-3,
+# beta0_init=0, but restores alpha_init to the production value of 6.0.
+pipelines: [spike]
+gpu_ids: null
+n_processes: 48
+
+spike:
+  fitting:
+    beta0_init: {Omicron_BA1: 0.0, Delta: 0.0, Omicron_BA2: 0.0}
+    alpha_init: {Omicron_BA1: 6.0, Delta: 6.0, Omicron_BA2: 6.0}
+    beta0_ridge: 1.0e-3
+    l2reg: 1.0e-2
