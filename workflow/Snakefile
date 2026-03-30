@@ -15,9 +15,16 @@ configfile: "config/config.yaml"
 # Load profile overrides if specified.
 # CLI --config values (run_name, gpu_ids, etc.) must take priority over
 # profile overrides, so we snapshot them before merging the profile and
-# restore them after.
+# restore them after.  Only snapshot keys that are CLI-only (not present
+# in the base configfile) to avoid clobbering profile overrides for keys
+# like "pipelines" that also exist in the base config.
+_base_configfile = yaml.safe_load(open("config/config.yaml"))
 _cli_keys = {"run_name", "profile", "gpu_ids", "pipelines"}
-_cli_overrides = {k: config[k] for k in _cli_keys if k in config}
+_cli_overrides = {
+    k: config[k]
+    for k in _cli_keys
+    if k in config and config[k] != _base_configfile.get(k)
+}
 
 profile = config.get("profile", "")
 if profile:
